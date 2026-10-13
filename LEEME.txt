@@ -1,0 +1,65 @@
+APOCALYPSE: LAST SURVIVOR — PAQUETE COMPLETO
+
+INSTALACION
+1. Respalda tu archivo Python anterior.
+2. Extrae TODO este ZIP dentro de apocalypse. Reemplaza apocalypse_ultimate.py
+   y combina/reemplaza la carpeta assets. No coloques las imagenes fuera de assets.
+3. Conserva tus audios musicfondo.mpeg, zomb1.mpeg, zomb2.mpeg y la carpeta Gocake.
+   Esos archivos personales no se incluyen porque no se adjuntaron.
+4. En tu entorno virtual: python apocalypse_ultimate.py
+
+Incluye assets/fondo_inicio.png, assets/personajes.png y assets/caminata.png.
+Se requiere pygame. Si falta: python -m pip install pygame
+La fuente Gocake se detecta en subcarpetas. Si falta se usa una fuente alternativa.
+
+HABILIDADES
+Obed: Inspiracion, +20% de velocidad y disparo aproximadamente doble durante 6 s
+para todo el equipo vivo; recarga 18 s.
+Alexis: Evasion, desplazamiento de hasta 84 px sin atravesar obstaculos,
+inmunidad 0.6 s; recarga 8 s.
+Roberto: Impacto, 45 de dano y empuje en un radio de 145 px; recarga 14 s.
+Daniel: Auxilio, cura 35 HP a aliados vivos a 220 px; recarga 20 s.
+Si no hay nadie herido cerca, Auxilio no consume la habilidad.
+P1: F. P2: 0 o NUM 0. Mando: boton 9 (stick izquierdo en mandos compatibles).
+El HUD muestra la disponibilidad. Las recargas avanzan solo durante la partida.
+Menu: HABILIDADES Y SKINS. H tambien abre el apartado desde seleccion o pausa.
+
+SKINS
+Cuatro variantes de color: Original, Esmeralda, Violeta y Artico.
+Son cosmeticas y gratuitas; se guardan en skins.json junto al juego.
+En seleccion o habilidades: X cambia skin; A/D cambia personaje.
+Mando: X (boton 2) cambia skin; LB/RB cambia personaje en habilidades.
+Las variantes se aplican a los retratos y a las animaciones de partida.
+El fondo ilustrado conserva los trajes originales.
+
+TIENDA ENTRE NIVELES
+Al completar un nivel, ENTER abre la tienda. La bolsa de monedas es compartida.
+Botiquin: $3. Granada: $4. Dano +5: $6 (hasta 3 mejoras por jugador).
+Salud maxima +20: $6 (hasta 3 mejoras por jugador).
+Arriba/abajo selecciona; TAB cambia comprador en cooperativo; ENTER compra.
+N avanza al siguiente nivel sin obligacion de comprar.
+Mando: LB/RB selecciona; Y cambia comprador; A compra; START sigue.
+El gasto no reduce las monedas requeridas para completar el nivel.
+Compras, consumibles y saldo se conservan entre niveles de la misma partida.
+Cada nivel restaura la salud; una partida nueva reinicia saldo y mejoras.
+Las skins permanecen guardadas.
+
+MAPA ESTILO THE BINDING OF ISAAC
+Cada piso ahora es un laberinto de salas generadas al azar sobre una cuadricula.
+Las puertas conectan salas vecinas y se cierran mientras queden zombis vivos;
+al despejar una sala se abren y sueltan una recompensa.
+Arriba a la derecha hay un minimapa: tu sala en blanco, salas visitadas en gris,
+la sala del JEFE marcada en rojo y la sala del TESORO en dorado.
+La sala del tesoro guarda monedas, botiquin y un power-up sin enemigos.
+La sala del JEFE siempre existe en cada piso y queda al fondo del laberinto:
+al entrar suena la alarma, se cierran las puertas y aparece el jefe con
+acompanantes. Su vida crece con el nivel. Al vencerlo aparece una trampilla:
+pisala con todo el equipo (1.2 s) para completar el piso.
+El objetivo de monedas ya no es obligatorio: las monedas sirven para la tienda.
+La extraccion fue reemplazada por la trampilla del jefe.
+Nuevo logro: EXPLORADOR (visitar todas las salas de un piso).
+
+SE CONSERVA
+Fondo original, titulo con Gocake, cuatro personajes, caminata por cuadros,
+armas con retroceso/destello, monedas con $, zombis animados y musica de fondo.
+F1 silencio, F2/F3 musica, F4/F5 efectos. Las teclas originales de combate siguen iguales.
