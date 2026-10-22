@@ -1,0 +1,332 @@
+{
+  "p0_inicio": {
+    "texto": "Equipo, mantengámonos juntos.",
+    "mujer": false,
+    "emocion": "decidido",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-1%\" pitch=\"+0%\" volume=\"medium\">Equipo, mantengámonos juntos.</prosody></speak>"
+  },
+  "p0_herida": {
+    "texto": "¡Ah! Me dieron. Necesito cobertura.",
+    "mujer": false,
+    "emocion": "dolor y urgencia",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+16%\" pitch=\"+10%\" volume=\"loud\">¡Ah!</prosody><break time=\"175ms\"/><prosody rate=\"+11%\" pitch=\"+6%\" volume=\"medium\">Me dieron.</prosody><break time=\"175ms\"/><prosody rate=\"+9%\" pitch=\"+3%\" volume=\"medium\">Necesito cobertura.</prosody></speak>"
+  },
+  "p0_curar": {
+    "texto": "Mucho mejor. Seguimos.",
+    "mujer": false,
+    "emocion": "alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-15%\" pitch=\"-3%\" volume=\"medium\">Mucho mejor.</prosody><break time=\"230ms\"/><prosody rate=\"-17%\" pitch=\"-10%\" volume=\"medium\">Seguimos.</prosody></speak>"
+  },
+  "p0_granada": {
+    "texto": "¡Granada! Todos atrás.",
+    "mujer": false,
+    "emocion": "advertencia urgente",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+18%\" pitch=\"+10%\" volume=\"loud\">¡Granada!</prosody><break time=\"90ms\"/><prosody rate=\"+13%\" pitch=\"+3%\" volume=\"medium\">Todos atrás.</prosody></speak>"
+  },
+  "p0_habilidad": {
+    "texto": "Juntos somos más fuertes.",
+    "mujer": false,
+    "emocion": "determinación",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+9%\" pitch=\"+6%\" volume=\"loud\">Juntos somos más fuertes.</prosody></speak>"
+  },
+  "p0_despejada": {
+    "texto": "Buen trabajo. La sala está despejada.",
+    "mujer": false,
+    "emocion": "alegría y alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+1%\" pitch=\"+7%\" volume=\"medium\">Buen trabajo.</prosody><break time=\"180ms\"/><prosody rate=\"-1%\" pitch=\"+0%\" volume=\"medium\">La sala está despejada.</prosody></speak>"
+  },
+  "p0_manual": {
+    "texto": "Nadie se queda atrás.",
+    "mujer": false,
+    "emocion": "esperanza",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-8%\" pitch=\"+2%\" volume=\"medium\">Nadie se queda atrás.</prosody></speak>"
+  },
+  "n0_saludo": {
+    "texto": "¡Sigues en pie! Sabía que volveríamos a encontrarnos. ¿Qué necesitas?",
+    "mujer": false,
+    "emocion": "alegría al reencontrarse",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-5%\" pitch=\"+5%\" volume=\"medium\">¡Sigues en pie!</prosody><break time=\"190ms\"/><prosody rate=\"-7%\" pitch=\"+1%\" volume=\"medium\">Sabía que volveríamos a encontrarnos.</prosody><break time=\"190ms\"/><prosody rate=\"-9%\" pitch=\"-2%\" volume=\"medium\">¿Qué necesitas?</prosody></speak>"
+  },
+  "n0_estado": {
+    "texto": "Estoy cansado, pero no pienso rendirme. Mientras sigamos unidos, hay esperanza.",
+    "mujer": false,
+    "emocion": "preocupación sincera",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-13%\" pitch=\"-3%\" volume=\"medium\">Estoy cansado, pero no pienso rendirme.</prosody><break time=\"240ms\"/><prosody rate=\"-15%\" pitch=\"-10%\" volume=\"medium\">Mientras sigamos unidos, hay esperanza.</prosody></speak>"
+  },
+  "n0_consejo": {
+    "texto": "Despeja las salas para abrir las puertas. Guarda monedas para la tienda entre pisos.",
+    "mujer": false,
+    "emocion": "atento y cercano",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-7%\" pitch=\"+0%\" volume=\"medium\">Despeja las salas para abrir las puertas.</prosody><break time=\"170ms\"/><prosody rate=\"-9%\" pitch=\"-7%\" volume=\"medium\">Guarda monedas para la tienda entre pisos.</prosody></speak>"
+  },
+  "n0_equipo": {
+    "texto": "Prometimos volver a encontrarnos. Si ves a los demás, diles que sigo luchando.",
+    "mujer": false,
+    "emocion": "esperanza y afecto",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-13%\" pitch=\"+2%\" volume=\"medium\">Prometimos volver a encontrarnos.</prosody><break time=\"250ms\"/><prosody rate=\"-15%\" pitch=\"-5%\" volume=\"medium\">Si ves a los demás, diles que sigo luchando.</prosody></speak>"
+  },
+  "p1_inicio": {
+    "texto": "Revisaré el camino. Síganme.",
+    "mujer": false,
+    "emocion": "decidido",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+9%\" pitch=\"+8%\" volume=\"medium\">Revisaré el camino.</prosody><break time=\"115ms\"/><prosody rate=\"+7%\" pitch=\"+1%\" volume=\"medium\">Síganme.</prosody></speak>"
+  },
+  "p1_herida": {
+    "texto": "¡Ay! Eso dolió. Sigo en pie.",
+    "mujer": false,
+    "emocion": "dolor y urgencia",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+26%\" pitch=\"+18%\" volume=\"loud\">¡Ay!</prosody><break time=\"175ms\"/><prosody rate=\"+21%\" pitch=\"+14%\" volume=\"medium\">Eso dolió.</prosody><break time=\"175ms\"/><prosody rate=\"+19%\" pitch=\"+11%\" volume=\"medium\">Sigo en pie.</prosody></speak>"
+  },
+  "p1_curar": {
+    "texto": "Ya me encuentro mejor.",
+    "mujer": false,
+    "emocion": "alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-5%\" pitch=\"+5%\" volume=\"medium\">Ya me encuentro mejor.</prosody></speak>"
+  },
+  "p1_granada": {
+    "texto": "Cuidado, va una granada.",
+    "mujer": false,
+    "emocion": "advertencia urgente",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+28%\" pitch=\"+18%\" volume=\"loud\">Cuidado, va una granada.</prosody></speak>"
+  },
+  "p1_habilidad": {
+    "texto": "No podrán alcanzarme.",
+    "mujer": false,
+    "emocion": "determinación",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+19%\" pitch=\"+14%\" volume=\"loud\">No podrán alcanzarme.</prosody></speak>"
+  },
+  "p1_despejada": {
+    "texto": "Camino libre. Podemos avanzar.",
+    "mujer": false,
+    "emocion": "alegría y alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+11%\" pitch=\"+15%\" volume=\"medium\">Camino libre.</prosody><break time=\"180ms\"/><prosody rate=\"+9%\" pitch=\"+8%\" volume=\"medium\">Podemos avanzar.</prosody></speak>"
+  },
+  "p1_manual": {
+    "texto": "Escuchen. Hay algo cerca.",
+    "mujer": false,
+    "emocion": "esperanza",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+2%\" pitch=\"+10%\" volume=\"medium\">Escuchen.</prosody><break time=\"210ms\"/><prosody rate=\"+0%\" pitch=\"+3%\" volume=\"medium\">Hay algo cerca.</prosody></speak>"
+  },
+  "n1_saludo": {
+    "texto": "Te vi llegar desde el pasillo. Acércate, tenemos un momento para hablar.",
+    "mujer": false,
+    "emocion": "alegría al reencontrarse",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+5%\" pitch=\"+13%\" volume=\"medium\">Te vi llegar desde el pasillo.</prosody><break time=\"190ms\"/><prosody rate=\"+3%\" pitch=\"+6%\" volume=\"medium\">Acércate, tenemos un momento para hablar.</prosody></speak>"
+  },
+  "n1_estado": {
+    "texto": "Me duelen las piernas de explorar, pero sigo entero. Tú también cuídate.",
+    "mujer": false,
+    "emocion": "preocupación sincera",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-3%\" pitch=\"+5%\" volume=\"medium\">Me duelen las piernas de explorar, pero sigo entero.</prosody><break time=\"240ms\"/><prosody rate=\"-5%\" pitch=\"-2%\" volume=\"medium\">Tú también cuídate.</prosody></speak>"
+  },
+  "n1_consejo": {
+    "texto": "Mira el minimapa: el rojo marca al jefe y el dorado, el tesoro. Explorar tiene recompensa.",
+    "mujer": false,
+    "emocion": "atento y cercano",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+3%\" pitch=\"+8%\" volume=\"medium\">Mira el minimapa: el rojo marca al jefe y el dorado, el tesoro.</prosody><break time=\"170ms\"/><prosody rate=\"+1%\" pitch=\"+1%\" volume=\"medium\">Explorar tiene recompensa.</prosody></speak>"
+  },
+  "n1_equipo": {
+    "texto": "Nos separamos durante el brote. Sigue buscando en otras salas; quizá encuentres a los demás.",
+    "mujer": false,
+    "emocion": "esperanza y afecto",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-3%\" pitch=\"+10%\" volume=\"medium\">Nos separamos durante el brote.</prosody><break time=\"250ms\"/><prosody rate=\"-5%\" pitch=\"+3%\" volume=\"medium\">Sigue buscando en otras salas; quizá encuentres a los demás.</prosody></speak>"
+  },
+  "p2_inicio": {
+    "texto": "Aquí estoy. Vamos a sobrevivir.",
+    "mujer": false,
+    "emocion": "decidido",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-2%\" pitch=\"-6%\" volume=\"medium\">Aquí estoy.</prosody><break time=\"115ms\"/><prosody rate=\"-4%\" pitch=\"-13%\" volume=\"medium\">Vamos a sobrevivir.</prosody></speak>"
+  },
+  "p2_herida": {
+    "texto": "¡Ah! Todavía no han acabado conmigo.",
+    "mujer": false,
+    "emocion": "dolor y urgencia",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+15%\" pitch=\"+4%\" volume=\"loud\">¡Ah!</prosody><break time=\"175ms\"/><prosody rate=\"+10%\" pitch=\"-3%\" volume=\"medium\">Todavía no han acabado conmigo.</prosody></speak>"
+  },
+  "p2_curar": {
+    "texto": "Eso era justo lo que necesitaba.",
+    "mujer": false,
+    "emocion": "alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-16%\" pitch=\"-9%\" volume=\"medium\">Eso era justo lo que necesitaba.</prosody></speak>"
+  },
+  "p2_granada": {
+    "texto": "Apártense. Ahí les va.",
+    "mujer": false,
+    "emocion": "advertencia urgente",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+17%\" pitch=\"+4%\" volume=\"loud\">Apártense.</prosody><break time=\"90ms\"/><prosody rate=\"+12%\" pitch=\"-3%\" volume=\"medium\">Ahí les va.</prosody></speak>"
+  },
+  "p2_habilidad": {
+    "texto": "Quítense de mi camino.",
+    "mujer": false,
+    "emocion": "determinación",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+8%\" pitch=\"+0%\" volume=\"loud\">Quítense de mi camino.</prosody></speak>"
+  },
+  "p2_despejada": {
+    "texto": "Eso es todo. No queda ninguno.",
+    "mujer": false,
+    "emocion": "alegría y alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+0%\" pitch=\"+1%\" volume=\"medium\">Eso es todo.</prosody><break time=\"180ms\"/><prosody rate=\"-2%\" pitch=\"-6%\" volume=\"medium\">No queda ninguno.</prosody></speak>"
+  },
+  "p2_manual": {
+    "texto": "Todavía tenemos una oportunidad.",
+    "mujer": false,
+    "emocion": "esperanza",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-9%\" pitch=\"-4%\" volume=\"medium\">Todavía tenemos una oportunidad.</prosody></speak>"
+  },
+  "n2_saludo": {
+    "texto": "¡Una cara conocida! Ya empezaba a cansarme de hablar con las paredes.",
+    "mujer": false,
+    "emocion": "alegría al reencontrarse",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-6%\" pitch=\"-1%\" volume=\"medium\">¡Una cara conocida!</prosody><break time=\"190ms\"/><prosody rate=\"-8%\" pitch=\"-8%\" volume=\"medium\">Ya empezaba a cansarme de hablar con las paredes.</prosody></speak>"
+  },
+  "n2_estado": {
+    "texto": "He tenido días mejores... y enemigos peores. Todavía me quedan fuerzas.",
+    "mujer": false,
+    "emocion": "preocupación sincera",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-14%\" pitch=\"-9%\" volume=\"medium\">He tenido días mejores...</prosody><break time=\"240ms\"/><prosody rate=\"-16%\" pitch=\"-13%\" volume=\"medium\">y enemigos peores.</prosody><break time=\"240ms\"/><prosody rate=\"-18%\" pitch=\"-16%\" volume=\"medium\">Todavía me quedan fuerzas.</prosody></speak>"
+  },
+  "n2_consejo": {
+    "texto": "No te quedes rodeado. Muévete, usa el golpe y reserva las granadas para los grupos.",
+    "mujer": false,
+    "emocion": "atento y cercano",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-8%\" pitch=\"-6%\" volume=\"medium\">No te quedes rodeado.</prosody><break time=\"170ms\"/><prosody rate=\"-10%\" pitch=\"-13%\" volume=\"medium\">Muévete, usa el golpe y reserva las granadas para los grupos.</prosody></speak>"
+  },
+  "n2_equipo": {
+    "texto": "Obed siempre decía que nadie se queda atrás. Esa promesa también cuenta para ti.",
+    "mujer": false,
+    "emocion": "esperanza y afecto",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-14%\" pitch=\"-4%\" volume=\"medium\">Obed siempre decía que nadie se queda atrás.</prosody><break time=\"250ms\"/><prosody rate=\"-16%\" pitch=\"-11%\" volume=\"medium\">Esa promesa también cuenta para ti.</prosody></speak>"
+  },
+  "p3_inicio": {
+    "texto": "Listos. Cuidaré de ustedes.",
+    "mujer": false,
+    "emocion": "decidido",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-4%\" pitch=\"+3%\" volume=\"medium\">Listos.</prosody><break time=\"115ms\"/><prosody rate=\"-6%\" pitch=\"-4%\" volume=\"medium\">Cuidaré de ustedes.</prosody></speak>"
+  },
+  "p3_herida": {
+    "texto": "¡Ah! Estoy herido. Busquemos un lugar seguro.",
+    "mujer": false,
+    "emocion": "dolor y urgencia",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+13%\" pitch=\"+13%\" volume=\"loud\">¡Ah!</prosody><break time=\"175ms\"/><prosody rate=\"+8%\" pitch=\"+9%\" volume=\"medium\">Estoy herido.</prosody><break time=\"175ms\"/><prosody rate=\"+6%\" pitch=\"+6%\" volume=\"medium\">Busquemos un lugar seguro.</prosody></speak>"
+  },
+  "p3_curar": {
+    "texto": "Herida tratada. Continuamos.",
+    "mujer": false,
+    "emocion": "alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-18%\" pitch=\"+0%\" volume=\"medium\">Herida tratada.</prosody><break time=\"230ms\"/><prosody rate=\"-20%\" pitch=\"-7%\" volume=\"medium\">Continuamos.</prosody></speak>"
+  },
+  "p3_granada": {
+    "texto": "¡Granada fuera! Mantengan distancia.",
+    "mujer": false,
+    "emocion": "advertencia urgente",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+15%\" pitch=\"+13%\" volume=\"loud\">¡Granada fuera!</prosody><break time=\"90ms\"/><prosody rate=\"+10%\" pitch=\"+6%\" volume=\"medium\">Mantengan distancia.</prosody></speak>"
+  },
+  "p3_habilidad": {
+    "texto": "Estoy aquí para ayudar.",
+    "mujer": false,
+    "emocion": "determinación",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+6%\" pitch=\"+9%\" volume=\"loud\">Estoy aquí para ayudar.</prosody></speak>"
+  },
+  "p3_despejada": {
+    "texto": "Zona segura. Revisen sus heridas.",
+    "mujer": false,
+    "emocion": "alegría y alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-2%\" pitch=\"+10%\" volume=\"medium\">Zona segura.</prosody><break time=\"180ms\"/><prosody rate=\"-4%\" pitch=\"+3%\" volume=\"medium\">Revisen sus heridas.</prosody></speak>"
+  },
+  "p3_manual": {
+    "texto": "Con calma. Podemos lograrlo.",
+    "mujer": false,
+    "emocion": "esperanza",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-11%\" pitch=\"+5%\" volume=\"medium\">Con calma.</prosody><break time=\"210ms\"/><prosody rate=\"-13%\" pitch=\"-2%\" volume=\"medium\">Podemos lograrlo.</prosody></speak>"
+  },
+  "n3_saludo": {
+    "texto": "Qué alivio verte. Respira un momento y dime cómo va todo.",
+    "mujer": false,
+    "emocion": "alegría al reencontrarse",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-8%\" pitch=\"+8%\" volume=\"medium\">Qué alivio verte.</prosody><break time=\"190ms\"/><prosody rate=\"-10%\" pitch=\"+1%\" volume=\"medium\">Respira un momento y dime cómo va todo.</prosody></speak>"
+  },
+  "n3_estado": {
+    "texto": "Estoy bien. Me preocupan los heridos; recuerda usar tus botiquines con Q o punto, según tu jugador.",
+    "mujer": false,
+    "emocion": "preocupación sincera",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-16%\" pitch=\"+0%\" volume=\"medium\">Estoy bien.</prosody><break time=\"240ms\"/><prosody rate=\"-18%\" pitch=\"-7%\" volume=\"medium\">Me preocupan los heridos; recuerda usar tus botiquines con Q o punto, según tu jugador.</prosody></speak>"
+  },
+  "n3_consejo": {
+    "texto": "Vigila tu salud y tu energía. Cada personaje tiene una habilidad: F para P1 y 0 para P2.",
+    "mujer": false,
+    "emocion": "atento y cercano",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-10%\" pitch=\"+3%\" volume=\"medium\">Vigila tu salud y tu energía.</prosody><break time=\"170ms\"/><prosody rate=\"-12%\" pitch=\"-4%\" volume=\"medium\">Cada personaje tiene una habilidad: F para P1 y 0 para P2.</prosody></speak>"
+  },
+  "n3_equipo": {
+    "texto": "Los registros de evacuación pueden darnos pistas. Hay que sobrevivir para reunir al equipo.",
+    "mujer": false,
+    "emocion": "esperanza y afecto",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-16%\" pitch=\"+5%\" volume=\"medium\">Los registros de evacuación pueden darnos pistas.</prosody><break time=\"250ms\"/><prosody rate=\"-18%\" pitch=\"-2%\" volume=\"medium\">Hay que sobrevivir para reunir al equipo.</prosody></speak>"
+  },
+  "p4_inicio": {
+    "texto": "Soy Valeria. Vamos a salir de esta.",
+    "mujer": true,
+    "emocion": "decidido",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+2%\" pitch=\"+8%\" volume=\"medium\">Soy Valeria.</prosody><break time=\"115ms\"/><prosody rate=\"+0%\" pitch=\"+1%\" volume=\"medium\">Vamos a salir de esta.</prosody></speak>"
+  },
+  "p4_herida": {
+    "texto": "¡Ay! Me alcanzaron, pero puedo seguir.",
+    "mujer": true,
+    "emocion": "dolor y urgencia",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+19%\" pitch=\"+18%\" volume=\"loud\">¡Ay!</prosody><break time=\"175ms\"/><prosody rate=\"+14%\" pitch=\"+11%\" volume=\"medium\">Me alcanzaron, pero puedo seguir.</prosody></speak>"
+  },
+  "p4_curar": {
+    "texto": "Ya estoy mejor. Gracias.",
+    "mujer": true,
+    "emocion": "alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-12%\" pitch=\"+5%\" volume=\"medium\">Ya estoy mejor.</prosody><break time=\"230ms\"/><prosody rate=\"-14%\" pitch=\"-2%\" volume=\"medium\">Gracias.</prosody></speak>"
+  },
+  "p4_granada": {
+    "texto": "¡Granada! Busquen cobertura.",
+    "mujer": true,
+    "emocion": "advertencia urgente",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+21%\" pitch=\"+18%\" volume=\"loud\">¡Granada!</prosody><break time=\"90ms\"/><prosody rate=\"+16%\" pitch=\"+11%\" volume=\"medium\">Busquen cobertura.</prosody></speak>"
+  },
+  "p4_habilidad": {
+    "texto": "No me voy a rendir.",
+    "mujer": true,
+    "emocion": "determinación",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+12%\" pitch=\"+14%\" volume=\"loud\">No me voy a rendir.</prosody></speak>"
+  },
+  "p4_despejada": {
+    "texto": "Lo logramos. Sigamos juntos.",
+    "mujer": true,
+    "emocion": "alegría y alivio",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"+4%\" pitch=\"+15%\" volume=\"medium\">Lo logramos.</prosody><break time=\"180ms\"/><prosody rate=\"+2%\" pitch=\"+8%\" volume=\"medium\">Sigamos juntos.</prosody></speak>"
+  },
+  "p4_manual": {
+    "texto": "Vamos. Podemos lograrlo.",
+    "mujer": true,
+    "emocion": "esperanza",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-5%\" pitch=\"+10%\" volume=\"medium\">Vamos.</prosody><break time=\"210ms\"/><prosody rate=\"-7%\" pitch=\"+3%\" volume=\"medium\">Podemos lograrlo.</prosody></speak>"
+  },
+  "n4_saludo": {
+    "texto": "Soy Valeria. Creí que estaba sola en esta zona. Me alegra encontrarte. ¿Hablamos?",
+    "mujer": true,
+    "emocion": "alegría al reencontrarse",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-2%\" pitch=\"+13%\" volume=\"medium\">Soy Valeria.</prosody><break time=\"190ms\"/><prosody rate=\"-4%\" pitch=\"+9%\" volume=\"medium\">Creí que estaba sola en esta zona.</prosody><break time=\"190ms\"/><prosody rate=\"-6%\" pitch=\"+9%\" volume=\"medium\">Me alegra encontrarte.</prosody><break time=\"190ms\"/><prosody rate=\"-8%\" pitch=\"+6%\" volume=\"medium\">¿Hablamos?</prosody></speak>"
+  },
+  "n4_estado": {
+    "texto": "Estoy bien. A veces tengo miedo, pero todavía me quedan fuerzas para ayudar al equipo.",
+    "mujer": true,
+    "emocion": "preocupación sincera",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-10%\" pitch=\"+5%\" volume=\"medium\">Estoy bien.</prosody><break time=\"240ms\"/><prosody rate=\"-12%\" pitch=\"-2%\" volume=\"medium\">A veces tengo miedo, pero todavía me quedan fuerzas para ayudar al equipo.</prosody></speak>"
+  },
+  "n4_consejo": {
+    "texto": "Mi habilidad Determinación me protege cinco segundos y recupera mi energía. No olvides guardar una salida.",
+    "mujer": true,
+    "emocion": "atento y cercano",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-4%\" pitch=\"+8%\" volume=\"medium\">Mi habilidad Determinación me protege cinco segundos y recupera mi energía.</prosody><break time=\"170ms\"/><prosody rate=\"-6%\" pitch=\"+1%\" volume=\"medium\">No olvides guardar una salida.</prosody></speak>"
+  },
+  "n4_equipo": {
+    "texto": "Los he visto luchar por sus amigos. Quiero ayudarles a reunir al equipo y salir de aquí juntos.",
+    "mujer": true,
+    "emocion": "esperanza y afecto",
+    "ssml": "<speak version=\"1.0\" xmlns=\"http://www.w3.org/2001/10/synthesis\" xml:lang=\"es-MX\"><prosody rate=\"-10%\" pitch=\"+10%\" volume=\"medium\">Los he visto luchar por sus amigos.</prosody><break time=\"250ms\"/><prosody rate=\"-12%\" pitch=\"+3%\" volume=\"medium\">Quiero ayudarles a reunir al equipo y salir de aquí juntos.</prosody></speak>"
+  }
+}

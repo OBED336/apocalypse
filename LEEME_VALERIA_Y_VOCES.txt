@@ -1,0 +1,51 @@
+APOCALYPSE - VALERIA Y VOCES EN ESPAÑOL
+
+INICIAR
+Extrae TODO el ZIP y abre INICIAR.bat.
+Requiere Python 3 y pygame. Si falta: python -m pip install -r requirements.txt
+Conserva el mapa original de salas y las conversaciones anteriores.
+
+NUEVA PERSONAJE
+Valeria es una superviviente seleccionable por cualquiera de los dos jugadores.
+En selección, usa A/D o flechas hasta Valeria y confirma con Enter.
+Tiene retrato, imágenes de caminata, pose sentada y variantes de color.
+Si no la eliges, puede aparecer como compañera con la que conversar.
+
+Su habilidad Determinación concede 5 segundos de escudo y recupera toda
+su energía. Recarga: 20 segundos de juego. P1: F; P2: 0; mando: botón 9.
+
+PALABRAS Y VOCES
+Los cinco personajes tienen frases propias, tanto escritas sobre su cabeza
+como pronunciadas con audio en español. Se incluyen 55 audios WAV locales.
+Hablan al comenzar, recibir daño, curarse, lanzar granadas, usar la habilidad
+y despejar una sala. Los comentarios automáticos tienen un tiempo de espera
+para evitar que se repitan continuamente o se superpongan.
+
+Y: P1 dice una frase. U: P2 dice una frase.
+V: activar o desactivar las voces (conserva los textos).
+F1: silenciar todo el audio. F4/F5: bajar/subir volumen de efectos y voces.
+Los controles de frase manual usan teclado; los eventos también hablan al
+jugar con mando. Las voces usan un canal propio que no ocupan los disparos.
+
+T (P1), L (P2) o R3 (mando): hablar cerca de un compañero sentado.
+Las conversaciones ahora también tienen voz en sus saludos y respuestas.
+Las respuestas habladas cubren la parte fija del texto; el nombre del jugador,
+la zona actual y otras adiciones contextuales se muestran por escrito.
+Escape cierra el diálogo y detiene la voz. La pausa detiene temporalmente
+las voces. No hay micrófono, servicios de IA en ejecución ni claves API.
+
+ARTE Y AUDIO
+El atlas nuevo assets/valeria_atlas.png se generó con ImageGen usando los
+personajes existentes como referencia de estilo. Tiene transparencia real.
+PROMPT_VALERIA.txt contiene el prompt utilizado.
+Las voces se sintetizaron con Microsoft Raul y Microsoft Sabina, español
+de México, y quedaron incluidas como WAV; no requieren instalar esas voces.
+
+VALIDACIÓN
+Comprobados: selección de 5 personajes, animaciones y tablas de recursos,
+Valeria para ambos jugadores, movimiento, disparo, duración del escudo,
+daño y curación, frases y canal de voz, silenciamiento, conversación de
+Valeria, habilidad y pantalla de selección. Se cargaron los 55 audios.
+También pasaron las pruebas anteriores de conversación y pausa del mundo.
+Se revisaron imágenes del juego, selección y diálogo. Las pruebas usan
+SDL sin ventana; no se verificó la salida por altavoces ni un mando físico.
