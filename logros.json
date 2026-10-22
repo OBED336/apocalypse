@@ -1,6 +1,9 @@
 {
-  "_monedas_total": 191,
+  "_monedas_total": 989,
   "primer_zombie": true,
   "100_monedas": true,
-  "jefe_derrotado": true
+  "jefe_derrotado": true,
+  "5000_puntos": true,
+  "explorador": true,
+  "nivel_6": true
 }

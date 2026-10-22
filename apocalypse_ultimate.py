@@ -2,7 +2,7 @@
 Apocalypse: Last Survivor
 Gráficos mejorados, sonidos procedurales, jefes, power-ups, clima, logros.
 Ejecutar: python apocalypse_ultimate.py
-Audio incluido sin archivos externos: F1 silencio, F2/F3 música, F4/F5 efectos.
+Efectos WAV en audio/: F1 silencio, F2/F3 música, F4/F5 efectos.
 """
 
 import pygame as pg
@@ -11,6 +11,10 @@ import random
 import sys
 import json
 import os
+from functools import lru_cache
+import graficos
+from sprites_caminata import cargar_pasos
+import conversaciones
 from datetime import datetime
 
 pg.mixer.pre_init(frequency=22050, size=-16, channels=1, buffer=512)
@@ -56,6 +60,61 @@ def cargar_imagen(nombre):
     try: return pg.image.load(ruta).convert_alpha()
     except (OSError,pg.error) as e:
         raise RuntimeError('Falta el recurso '+ruta+'. Extrae el ZIP completo junto al archivo Python.') from e
+
+HOSPITAL_PACK = os.path.join("ModernHospital2DPropsPack_v1.0", "Tiles")
+def cargar_imagen_hospital(ruta):
+    try:
+        return pg.image.load(os.path.join(BASE, "assets", HOSPITAL_PACK, ruta)).convert_alpha()
+    except (OSError, pg.error) as error:
+        print(f"No se pudo cargar una textura del hospital: {error}")
+        return None
+
+HOSPITAL_PROPS = [
+    cargar_imagen_hospital(ruta) for ruta in (
+        "Furniture/hospital_furniture_bed_examination_01.png",
+        "Furniture/hospital_furniture_gurney_stretcher_01.png",
+        "Furniture/hospital_furniture_wheelchair_01.png",
+        "Furniture/hospital_furniture_iv_stand_01.png",
+        "Furniture/hospital_furniture_cart_instrument_01.png",
+        "Furniture/hospital_furniture_cabinet_medicine_01.png",
+        "Equipment/hospital_equipment_oxygen_tanks_pair_01.png",
+        "Equipment/hospital_equipment_monitor_patient_01.png",
+        "Decor/hospital_decor_water_dispenser_column_01.png",
+    )
+]
+HOSPITAL_PROPS = [imagen for imagen in HOSPITAL_PROPS if imagen is not None]
+CITY_PACK = os.path.join("ModernCityOutdoor2DMegaPropsPack_v2.0", "Tiles")
+def cargar_imagen_ciudad(ruta):
+    try:
+        return pg.image.load(os.path.join(BASE, "assets", CITY_PACK, ruta)).convert_alpha()
+    except (OSError, pg.error) as error:
+        print(f"No se pudo cargar una textura de ciudad: {error}")
+        return None
+
+CITY_ROAD = cargar_imagen_ciudad("Architecture/street_architecture_road_asphalt_plain_01.png")
+CITY_LANE = cargar_imagen_ciudad("Architecture/street_architecture_road_asphalt_lane_line_01.png")
+CITY_SIDEWALK = cargar_imagen_ciudad("Architecture/street_architecture_sidewalk_plain_01.png")
+CITY_OLD_ROAD = cargar_imagen_ciudad("Architecture/Extended/street_architecture_alley_asphalt_old_01.png")
+CITY_BARRIER = cargar_imagen_ciudad("Utilities/street_utilities_construction_barrier_01.png")
+CITY_ROAD_TILE = pg.transform.smoothscale(CITY_ROAD, (218, 164)) if CITY_ROAD else None
+CITY_LANE_TILE = pg.transform.smoothscale(CITY_LANE, (218, 164)) if CITY_LANE else None
+CITY_OLD_TILE = pg.transform.smoothscale(CITY_OLD_ROAD, (218, 164)) if CITY_OLD_ROAD else None
+CITY_SIDEWALK_TILE = pg.transform.smoothscale(CITY_SIDEWALK, (218, 164)) if CITY_SIDEWALK else None
+CITY_LANE_H_TILE = pg.transform.rotate(CITY_LANE_TILE,90) if CITY_LANE_TILE else None
+CITY_BARRIER_H = pg.transform.smoothscale(pg.transform.rotate(CITY_BARRIER, 90), (106, 44)) if CITY_BARRIER else None
+CITY_BARRIER_V = pg.transform.smoothscale(CITY_BARRIER, (44, 106)) if CITY_BARRIER else None
+CITY_DOOR_PATCHES = {
+    nivel: (pg.transform.smoothscale(piso,(96,35)),pg.transform.smoothscale(piso,(40,96)))
+    for nivel,piso in ((0,CITY_OLD_TILE or CITY_ROAD_TILE),(1,CITY_ROAD_TILE)) if piso
+}
+
+# ============ ICONO DE LA VENTANA ============
+try:
+    icono_img = cargar_imagen('icono.png')
+    pg.display.set_icon(icono_img)
+except Exception:
+    pass
+
 FONDO_INICIO=pg.transform.smoothscale(cargar_imagen('fondo_inicio.png'),(ANCHO,ALTO))
 HOJA_PERSONAJES=cargar_imagen('personajes.png')
 # Coordenadas normalizadas de los cuatro retratos; excluyen las etiquetas.
@@ -69,35 +128,125 @@ def ajustar_imagen(imagen,ancho,alto):
     escala=min(ancho/imagen.get_width(),alto/imagen.get_height())
     return pg.transform.smoothscale(imagen,(max(1,round(imagen.get_width()*escala)),max(1,round(imagen.get_height()*escala))))
 AVATARES=[ajustar_imagen(im,200,175) for im in RETRATOS]
+
 SPRITES_HEROES=[ajustar_imagen(im,70,78) for im in RETRATOS]
 
-# Secuencia de pasos: atlas original, precargado y sin rotar el cuerpo.
-ATLAS_PASOS=cargar_imagen('caminata.png')
-PASOS=[]
-for fila in range(4):
-    cuadros=[]
-    # La cuarta celda de Roberto se descarta: pertenece a otro personaje.
-    for columna in ([0,1,2,1] if fila==2 else [0,1,2,3]):
-        w,h=ATLAS_PASOS.get_size()
-        x0,x1=round(columna*w/4),round((columna+1)*w/4)
-        y0,y1=round(fila*h/4),round((fila+1)*h/4)
-        celda=ATLAS_PASOS.subsurface((x0,y0,x1-x0,y1-y0)).copy()
-        limites=celda.get_bounding_rect(min_alpha=100)
-        figura=celda.subsurface(limites).copy()
-        figura=ajustar_imagen(figura,72,78)
-        cuadros.append((figura,pg.transform.flip(figura,True,False)))
-    PASOS.append(cuadros)
+# ============ PERSONAJES DE ESPERA EN EL MAPA ============
+def cargar_companeros_espera():
+    candidatos = [
+        os.path.join(BASE, "assets", "image.png"),
+        r"D:\assets\assets\image.png",
+    ]
+    ruta = next((r for r in candidatos if os.path.isfile(r)), None)
+    if not ruta:
+        return []
+    try:
+        hoja = pg.image.load(ruta).convert_alpha()
+        hoja.set_colorkey((0, 0, 0))
+        ancho, alto = hoja.get_size()
+        resultado = []
+        for i in range(4):
+            x0 = round(i * ancho / 4)
+            x1 = round((i + 1) * ancho / 4)
+            celda = hoja.subsurface(pg.Rect(x0, 0, x1 - x0, alto)).copy()
+            limites = celda.get_bounding_rect(min_alpha=1)
+            if limites.width and limites.height:
+                recorte = celda.subsurface(limites).copy()
+                resultado.append(ajustar_imagen(recorte, 92, 92))
+            else:
+                resultado.append(None)
+        return resultado
+    except (OSError, pg.error):
+        return []
+
+SPRITES_ESPERA = cargar_companeros_espera()
+companeros_mapa = []
+
+def crear_companeros_mapa(idx):
+    global companeros_mapa
+    companeros_mapa = []
+    elegidos = set(seleccionados[:2 if coop else 1])
+    disponibles = [i for i in range(len(SPRITES_ESPERA))
+                   if i not in elegidos and SPRITES_ESPERA[i] is not None]
+    if not disponibles: return
+    salas = [c for c, s in mapa_salas.items() if s.tipo not in ("inicio", "jefe")]
+    if len(salas) < 2:
+        salas = [c for c in mapa_salas if c != (0, 0)] or list(mapa_salas)
+    random.shuffle(salas)
+    sala_a, sala_b = salas[0], salas[1] if len(salas) > 1 else salas[0]
+    ubicaciones = [(disponibles[0], sala_a)]
+    if disponibles[1:]: ubicaciones.append((disponibles[1], sala_b))
+    for indice in disponibles[2:]:
+        candidatas = [s for s in (sala_a, sala_b) if
+                      sum(1 for _, ns in ubicaciones if ns == s) < 2]
+        ubicaciones.append((indice, random.choice(candidatas) if candidatas else sala_a))
+    ocupadas = []
+    def punto_libre(radio=20):
+        for _ in range(400):
+            x,y=random.randint(65,ANCHO-65),random.randint(140,ALTO-65)
+            if (libre(x,y,radio)
+                and all(math.hypot(x-j.x,y-j.y)>=170 for j in jugadores)
+                and all(math.hypot(x-ox,y-oy)>=110 for ox,oy in ocupadas)):
+                return x,y
+        for y in range(140,ALTO-60,30):
+            for x in range(65,ANCHO-60,30):
+                if (libre(x,y,radio)
+                    and all(math.hypot(x-j.x,y-j.y)>=170 for j in jugadores)
+                    and all(math.hypot(x-ox,y-oy)>=110 for ox,oy in ocupadas)):
+                    return x,y
+        return None
+    for indice, clave in ubicaciones:
+        punto = punto_libre()
+        if punto is None: continue
+        ocupadas.append(punto)
+        companeros_mapa.append({"indice": indice, "sala": clave, "x": punto[0], "y": punto[1]})
+
+def dibujar_companeros_espera():
+    if not companeros_mapa or sala_actual is None: return
+    clave = (sala_actual.cx, sala_actual.cy)
+    for c in companeros_mapa:
+        if c["sala"] != clave: continue
+        sprite = SPRITES_ESPERA[c["indice"]]
+        if sprite is None: continue
+        vaivén = int(2 * math.sin(pg.time.get_ticks() / 700 + c["indice"]))
+        sombra_tocada(pantalla, c["x"] - 26, c["y"] + 12, 52, 12, (0, 0, 0, 100))
+        pantalla.blit(sprite, sprite.get_rect(midbottom=(c["x"], c["y"] + 10 + vaivén)))
+
+ATLAS_PASOS=cargar_imagen('caminata_6_frames_mejorada.png')
+PASOS=cargar_pasos(ATLAS_PASOS)
+DISTANCIA_CICLO_CAMINATA=168.0  # Mayor valor = cambio de fotograma más lento.
 IDLE_HEROES=[(im,pg.transform.flip(im,True,False)) for im in SPRITES_HEROES]
+
+_atlas_valeria = cargar_imagen('valeria_atlas.png')
+_poses_valeria = []
+for _fila, _col in ((0,0), (0,1), (1,0), (1,1)):
+    _w, _h = _atlas_valeria.get_size()
+    _celda = _atlas_valeria.subsurface((_col*_w//2, _fila*_h//2, _w//2, _h//2)).copy()
+    _limites = _celda.get_bounding_rect(min_alpha=20)
+    _poses_valeria.append(_celda.subsurface(_limites).copy())
+RETRATOS.append(_poses_valeria[0])
+AVATARES.append(ajustar_imagen(_poses_valeria[0], 200, 175))
+SPRITES_HEROES.append(ajustar_imagen(_poses_valeria[0], 70, 78))
+_idle_valeria = SPRITES_HEROES[-1]
+IDLE_HEROES.append((_idle_valeria, pg.transform.flip(_idle_valeria, True, False)))
+_pasos_valeria = []
+for _pose in (_poses_valeria[1], _poses_valeria[0], _poses_valeria[2], _poses_valeria[0]):
+    _im = ajustar_imagen(_pose, 72, 78)
+    _pasos_valeria.append((_im, pg.transform.flip(_im, True, False)))
+PASOS.append(_pasos_valeria)
+SPRITES_ESPERA.append(ajustar_imagen(_poses_valeria[3], 92, 92))
+
 SIMBOLO_MONEDA=pg.font.SysFont('dejavusans',21,bold=True).render('$',True,(92,49,8))
 
 def dibujar_arma(surf,j):
     dx,dy=j.direccion
-    lateral=(-dy,dx)
+    # Reflejar el arma al mirar a la izquierda mantiene la empuñadura abajo.
+    sentido=-1 if dx<0 or (dx==0 and j.mira_izquierda) else 1
+    lateral=(-dy*sentido,dx*sentido)
     disparando=j.destello>0
     retroceso=3 if disparando else 0
-    largo=38 if j.arma else 29
-    # Coordenadas locales: empuñadura, corredera, cañón y mano.
-    origen=(j.x+dx*(8-retroceso),j.y+dy*(8-retroceso))
+    largo=30 if j.arma else 21
+    origen=(j.x+dx*(7-retroceso),j.y-10+dy*(7-retroceso))
     def punto(u,v):
         return (round(origen[0]+dx*u+lateral[0]*v),round(origen[1]+dy*u+lateral[1]*v))
     def forma(color,coords):
@@ -115,15 +264,29 @@ def dibujar_arma(surf,j):
         forma((255,172,32),[(largo,-3),(largo+8,-7),(largo+6,-2),(largo+15,0),(largo+6,3),(largo+8,7),(largo,3)])
         pg.draw.circle(surf,(255,247,184),punto(largo+3,0),3)
 
-
-def fondo_portada():
-    pantalla.blit(FONDO_INICIO,(0,0))
-    # Panel translúcido: asegura contraste sin ocultar a los personajes laterales.
+@lru_cache(maxsize=1)
+def panel_portada():
     panel=pg.Surface((540,ALTO),pg.SRCALPHA)
     for x in range(540):
         alpha=round(170*min(1,x/90,(539-x)/90))
         pg.draw.line(panel,(5,10,20,alpha),(x,0),(x,ALTO))
-    pantalla.blit(panel,((ANCHO-540)//2,0))
+    return panel
+
+def fondo_portada():
+    pantalla.blit(FONDO_INICIO,(0,0))
+    pantalla.blit(panel_portada(),((ANCHO-540)//2,0))
+
+@lru_cache(maxsize=128)
+def circulo_cache(radio,color):
+    superficie=pg.Surface((radio*2,radio*2),pg.SRCALPHA)
+    pg.draw.circle(superficie,color,(radio,radio),radio)
+    return superficie
+
+@lru_cache(maxsize=64)
+def sombra_cache(ancho,alto,color):
+    superficie=pg.Surface((ancho,alto),pg.SRCALPHA)
+    pg.draw.ellipse(superficie,color,superficie.get_rect())
+    return superficie
 
 def texto_ajustado(f,texto,color,ancho):
     im=f.render(texto,True,color)
@@ -131,7 +294,6 @@ def texto_ajustado(f,texto,color,ancho):
         im=pg.transform.smoothscale(im,(ancho,max(1,round(im.get_height()*ancho/im.get_width()))))
     return im
 
-# ============ COLORES ============
 NEGRO = (8, 10, 16)
 BLANCO = (240, 240, 245)
 GRIS = (70, 75, 85)
@@ -152,7 +314,6 @@ PIEL = (235, 190, 150)
 DORADO = (255, 215, 0)
 CIAN = (80, 230, 240)
 
-# ============ TEMAS CON CLIMA ============
 TEMAS = [
     {"nombre": "Calles", "fondo": (48, 48, 55), "acento": (100, 100, 115), "clima": "soleado"},
     {"nombre": "Downtown", "fondo": (40, 45, 62), "acento": (70, 90, 130), "clima": "nublado"},
@@ -162,8 +323,6 @@ TEMAS = [
     {"nombre": "Final", "fondo": (28, 26, 42), "acento": (140, 70, 200), "clima": "tormenta_arena"},
 ]
 
-# ============ ARCHIVOS ============
-BASE = os.path.dirname(os.path.abspath(__file__))
 F_SCORES = os.path.join(BASE, "highscores.json")
 F_CREDITOS = os.path.join(BASE, "creditos.json")
 F_LOGROS = os.path.join(BASE, "logros.json")
@@ -174,7 +333,6 @@ def cargar_json(f, d):
             return json.load(fp)
     except (OSError, ValueError):
         return d
-
 
 def guardar_json(f, d):
     try:
@@ -206,9 +364,7 @@ if type(logros.get("_monedas_total")) is not int:
     logros["_monedas_total"] = 0
 logros["_monedas_total"] = max(0,logros["_monedas_total"])
 
-# ============ AUDIO PROCEDURAL ============
 def gen_sonido(freq, dur, forma="sine", vol=0.25):
-    # Sin NumPy: las muestras respetan la frecuencia y canales reales del mixer.
     if not AUDIO_OK:
         return None
     from array import array
@@ -231,17 +387,31 @@ def gen_sonido(freq, dur, forma="sine", vol=0.25):
         print(f"Audio desactivado para un efecto: {error}")
         return None
 
-S_DISPARO = gen_sonido(900, 0.06, "square", 0.15)
+def cargar_sonido_archivo(nombre, respaldo):
+    ruta = os.path.join(BASE, "audio", nombre)
+    if AUDIO_OK and os.path.isfile(ruta):
+        try: return pg.mixer.Sound(ruta)
+        except (pg.error, OSError): pass
+    return respaldo
+
+S_DISPARO = cargar_sonido_archivo("disparo.wav", gen_sonido(900, 0.06, "square", 0.15))
 S_ZOMBIE = gen_sonido(120, 0.15, "saw", 0.2)
 S_MUERTE = gen_sonido(80, 0.4, "saw", 0.3)
 S_MONEDA = gen_sonido(1400, 0.08, "sine", 0.2)
 S_POWERUP = gen_sonido(1800, 0.15, "square", 0.25)
+S_POWERUPS = {
+    "velocidad": cargar_sonido_archivo("powerup_velocidad.wav", gen_sonido(900, .22, "sine", .24)),
+    "escudo": cargar_sonido_archivo("powerup_escudo.wav", gen_sonido(520, .30, "sine", .24)),
+    "daño": cargar_sonido_archivo("powerup_triple.wav", gen_sonido(1300, .18, "square", .22)),
+    "vida": cargar_sonido_archivo("powerup_vida.wav", gen_sonido(740, .28, "sine", .24)),
+}
 S_HIT = gen_sonido(300, 0.08, "noise", 0.2)
 S_JEFE = gen_sonido(60, 0.8, "saw", 0.4)
+S_SALTO = gen_sonido(240, 0.35, "saw", 0.3)
+S_PUERTA_ABIERTA = gen_sonido(500, 0.35, "square", 0.16)
+S_PUERTA_CERRADA = gen_sonido(150, 0.25, "square", 0.2)
 S_NIVEL = gen_sonido(1200, 0.3, "sine", 0.3)
 
-# ============ AUDIO INTEGRADO ============
-# Música original sintetizada al arrancar; no necesita MP3, WAV ni NumPy.
 F_AUDIO = os.path.join(BASE, "audio_config.json")
 config_audio = cargar_json(F_AUDIO, {})
 if not isinstance(config_audio, dict): config_audio = {}
@@ -253,20 +423,19 @@ def volumen_valido(valor, predeterminado):
 
 volumen_musica = volumen_valido(config_audio.get("musica"), 0.35)
 volumen_efectos = volumen_valido(config_audio.get("efectos"), 0.70)
+volumen_voces = volumen_valido(config_audio.get("voces"), 0.70)
 audio_silenciado = config_audio.get("silenciado") is True
 ultima_reproduccion = {}
 pista_actual = None
 canal_musica = None
 if AUDIO_OK:
     pg.mixer.set_num_channels(24)
-    pg.mixer.set_reserved(4)  # Música, interfaz y alertas no compiten con disparos.
+    pg.mixer.set_reserved(4)
     canal_musica = pg.mixer.Channel(0)
 
-
 def guardar_audio():
-    guardar_json(F_AUDIO, {"musica":volumen_musica, "efectos":volumen_efectos,
+    guardar_json(F_AUDIO, {"musica":volumen_musica, "efectos":volumen_efectos, "voces":volumen_voces,
                           "silenciado":audio_silenciado})
-
 
 def aplicar_volumen():
     if not AUDIO_OK: return
@@ -274,7 +443,6 @@ def aplicar_volumen():
     pg.mixer.music.set_volume(0 if audio_silenciado else volumen_musica)
     for i in range(1,pg.mixer.get_num_channels()):
         pg.mixer.Channel(i).set_volume(0 if audio_silenciado else volumen_efectos)
-
 
 def play(sonido, grupo="efecto", espera=45):
     if sonido is None or not AUDIO_OK or audio_silenciado: return
@@ -290,7 +458,6 @@ def play(sonido, grupo="efecto", espera=45):
         if canal is None: return
     canal.set_volume(volumen_efectos)
     canal.play(sonido)
-
 
 def crear_musica(notas, bpm, tension=False):
     if not AUDIO_OK: return None
@@ -334,50 +501,45 @@ S_ARMA=gen_sonido(450,.07,"square",.12)
 S_LANZAR=gen_sonido(320,.12,"saw",.14)
 S_EXPLOSION=gen_sonido(70,.55,"noise",.30)
 S_TRUENO=gen_sonido(50,.85,"noise",.16)
-S_ESCOPETA=gen_sonido(180,.14,"noise",.23)
+S_ESCOPETA=S_DISPARO
 S_IMPACTO=gen_sonido(180,.08,"noise",.12)
 S_ALERTA=gen_sonido(760,.18,"square",.12)
 S_LOGRO=gen_sonido(1900,.25,"sine",.19)
 
-
 musica_externa = False
 externa_iniciada = False
 externa_pausada = False
-ruta_musica_normal = None
+ruta_musica_normal = ruta_musica_menu = ruta_musica_nivel = None
 ruta_musica_jefe = None
 pista_externa_actual = None
 
-
 def cargar_musica_fondo():
     global musica_externa, externa_iniciada, externa_pausada
-    global ruta_musica_normal, ruta_musica_jefe, pista_externa_actual
+    global ruta_musica_menu, ruta_musica_nivel, ruta_musica_jefe, pista_externa_actual
     musica_externa = externa_iniciada = externa_pausada = False
-    ruta_musica_normal = ruta_musica_jefe = pista_externa_actual = None
+    ruta_musica_menu = ruta_musica_nivel = ruta_musica_jefe = None
+    pista_externa_actual = None
     if not AUDIO_OK: return
 
-    # Música normal del juego.
     for nombre in ("musicfondo.mpeg", "musicfondo.mp3", "musicfondo.ogg", "musicfondo.wav"):
         ruta = os.path.join(BASE, nombre)
         if os.path.isfile(ruta):
-            ruta_musica_normal = ruta
-            print(f"[AUDIO] Música normal cargada: {nombre}")
+            ruta_musica_menu = ruta
             break
 
-    # Música exclusiva de la habitación del jefe.
+    for nombre in ("music.mp3", "music.mpeg", "music.mp2", "music.ogg", "music.wav"):
+        ruta = os.path.join(BASE, nombre)
+        if os.path.isfile(ruta):
+            ruta_musica_nivel = ruta
+            break
+
     ruta_jefe = os.path.join(BASE, "jefe.mpeg")
     if os.path.isfile(ruta_jefe):
         ruta_musica_jefe = ruta_jefe
-        print("[AUDIO] Música del jefe cargada: jefe.mpeg")
-    else:
-        print("[AUDIO] No se encontró jefe.mpeg. Se usará la música normal en la sala del jefe.")
 
-    musica_externa = ruta_musica_normal is not None
-    if not musica_externa:
-        print("[AUDIO] Se usará la música integrada.")
-
+    musica_externa = (ruta_musica_menu is not None or ruta_musica_nivel is not None)
 
 cargar_musica_fondo()
-
 
 def cambiar_musica_externa(ruta, reiniciar=True):
     global externa_iniciada, externa_pausada, pista_externa_actual
@@ -392,22 +554,18 @@ def cambiar_musica_externa(ruta, reiniciar=True):
         externa_iniciada = True
         externa_pausada = False
         return True
-    except (pg.error, OSError) as error:
-        print(f"[AUDIO] No se pudo reproducir {os.path.basename(ruta)}: {error}")
+    except (pg.error, OSError):
         pg.mixer.music.stop()
         externa_iniciada = False
         externa_pausada = False
         pista_externa_actual = None
         return False
 
-
 def actualizar_audio_base():
-    global pista_actual, musica_externa, externa_iniciada, externa_pausada
+    global pista_actual, musica_externa, externa_iniciada, externa_pausada, pista_externa_actual
     if not AUDIO_OK: return
 
-    # La música externa tiene prioridad. En la sala del jefe cambia a jefe.mpeg;
-    # cuando el jefe muere, vuelve automáticamente a musicfondo.
-    if musica_externa and ruta_musica_normal:
+    if musica_externa and (ruta_musica_menu or ruta_musica_nivel):
         if estado == PAUSA:
             if externa_iniciada and not externa_pausada:
                 pg.mixer.music.pause()
@@ -421,11 +579,17 @@ def actualizar_audio_base():
 
         if estado == JUGANDO and jefe_actual and jefe_actual.vida > 0 and ruta_musica_jefe:
             pista_deseada = ruta_musica_jefe
+        elif estado == JUGANDO:
+            pista_deseada = ruta_musica_nivel
         else:
-            pista_deseada = ruta_musica_normal
-
-        if pista_deseada != pista_externa_actual or not pg.mixer.music.get_busy():
-            cambiar_musica_externa(pista_deseada)
+            pista_deseada = ruta_musica_menu
+        if pista_deseada:
+            if pista_deseada != pista_externa_actual or not pg.mixer.music.get_busy():
+                cambiar_musica_externa(pista_deseada)
+        else:
+            pg.mixer.music.stop()
+            pista_externa_actual = None
+            externa_iniciada = False
         aplicar_volumen()
         return
 
@@ -447,14 +611,12 @@ def actualizar_audio_base():
         pista_actual=pista
     aplicar_volumen()
 
-# Un canal independiente permite oír zombis y música simultáneamente.
 SONIDOS_ZOMBIS = {}
 canal_zombis = pg.mixer.Channel(3) if AUDIO_OK else None
 nivel_audio_zombi = None
 espera_zombi = 0.8
 volumen_zombi = 0.0
 zombi_en_pausa = False
-
 
 def cargar_voces_zombi():
     SONIDOS_ZOMBIS.clear()
@@ -466,18 +628,14 @@ def cargar_voces_zombi():
                 if not os.path.isfile(ruta): continue
                 try:
                     SONIDOS_ZOMBIS[nombre]=pg.mixer.Sound(ruta)
-                    print(f"[AUDIO] Voz cargada: {nombre+extension}")
                     break
-                except (pg.error,OSError) as error:
-                    print(f"[AUDIO] No se pudo abrir {nombre+extension}: {error}")
+                except (pg.error,OSError):
+                    pass
             if nombre in SONIDOS_ZOMBIS: break
         if nombre not in SONIDOS_ZOMBIS:
             SONIDOS_ZOMBIS[nombre]=S_ZOMBIE
-            print(f"[AUDIO] {nombre}: se usará el gruñido integrado.")
-
 
 cargar_voces_zombi()
-
 
 def actualizar_voces_zombi(dt):
     global nivel_audio_zombi, espera_zombi, volumen_zombi, zombi_en_pausa
@@ -516,11 +674,9 @@ def actualizar_voces_zombi(dt):
             canal_zombis.play(sonido,maxtime=3500,fade_ms=90)
         espera_zombi=random.uniform(4,7)
 
-
 def actualizar_audio(dt=1/60):
     actualizar_audio_base()
     actualizar_voces_zombi(dt)
-
 
 def tecla_audio(tecla):
     global audio_silenciado,volumen_musica,volumen_efectos
@@ -536,7 +692,6 @@ def tecla_audio(tecla):
 
 aplicar_volumen()
 
-# ============ JOYSTICKS ============
 joysticks = []
 def actualizar_mandos():
     global joysticks
@@ -565,11 +720,13 @@ def dir_joy(idx):
     except: pass
     return (0,0)
 
-# ============ ESTADOS ============
 MENU, INSERT_COIN, INSTRUCCIONES, HISTORIA, SELECCION = "menu","coin","instr","hist","sel"
 JUGANDO, PAUSA, NIVEL_COMPLETO, GAME_OVER, VICTORIA, HIGHSCORES = "jug","pau","nc","go","vic","hs"
 
 estado = INSERT_COIN
+pausa_pantalla = "menu"
+pausa_seleccion = 0
+pausa_opcion = 0
 nivel_actual = 0
 escena_historia = 0
 coop = False
@@ -578,14 +735,34 @@ seleccionados = [0,1]
 turno_seleccion = 0
 cursor_personaje = 0
 
-# ============ NIVELES ============
 NIVELES = [
-    {"nombre":"Calles Abandonadas","zombies":5,"monedas":10,"botiquines":2,"obstaculos":5,"salas":6,"tiempo":150},
-    {"nombre":"Downtown","zombies":8,"monedas":14,"botiquines":3,"obstaculos":8,"salas":7,"tiempo":170},
-    {"nombre":"Hospital","zombies":10,"monedas":12,"botiquines":4,"obstaculos":10,"salas":8,"tiempo":190,"jefe":True},
-    {"nombre":"Base Militar","zombies":12,"monedas":15,"botiquines":3,"obstaculos":12,"salas":8,"tiempo":200},
-    {"nombre":"Dead Zone","zombies":16,"monedas":18,"botiquines":2,"obstaculos":15,"salas":9,"tiempo":220},
-    {"nombre":"Last Extraction","zombies":20,"monedas":20,"botiquines":3,"obstaculos":18,"salas":10,"tiempo":240,"jefe":True},
+    {"nombre":"Calles Abandonadas","zombies":5,"monedas":10,"botiquines":2,"obstaculos":5,"salas":6,"tiempo":500},
+    {"nombre":"Downtown","zombies":8,"monedas":14,"botiquines":3,"obstaculos":8,"salas":7,"tiempo":500},
+    {"nombre":"Hospital","zombies":10,"monedas":12,"botiquines":4,"obstaculos":10,"salas":8,"tiempo":500,"jefe":True},
+    {"nombre":"Base Militar","zombies":12,"monedas":15,"botiquines":3,"obstaculos":12,"salas":8,"tiempo":500},
+    {"nombre":"Dead Zone","zombies":16,"monedas":18,"botiquines":2,"obstaculos":15,"salas":9,"tiempo":500},
+    {"nombre":"Last Extraction","zombies":20,"monedas":20,"botiquines":3,"obstaculos":18,"salas":10,"tiempo":500,"jefe":True},
+]
+
+JEFE_TEMAS = [
+    {"nombre":"CARROÑERO","camisa":(150,90,40),"gorro":(240,140,30),
+     "vel":1.25,"daño":2,"salto":1.0,"disparo_desde":3,"invoca_desde":3,
+     "regenera":0,"onda":110,"onda_daño":8},
+    {"nombre":"SAQUEADOR ALPHA","camisa":(70,80,110),"gorro":(150,160,185),
+     "vel":1.0,"daño":0,"salto":0.75,"disparo_desde":2,"invoca_desde":3,
+     "regenera":0,"onda":110,"onda_daño":8},
+    {"nombre":"DR. CAOS","camisa":(215,225,215),"gorro":(120,200,60),
+     "vel":1.0,"daño":0,"salto":1.0,"disparo_desde":1,"invoca_desde":3,
+     "regenera":0.12,"onda":105,"onda_daño":6},
+    {"nombre":"MAYOR MUERTO","camisa":(75,95,55),"gorro":(85,125,65),
+     "vel":1.05,"daño":4,"salto":0.9,"disparo_desde":2,"invoca_desde":1,
+     "regenera":0,"onda":115,"onda_daño":8},
+    {"nombre":"ABOMINACIÓN","camisa":(140,30,60),"gorro":(220,40,50),
+     "vel":1.1,"daño":2,"salto":1.0,"disparo_desde":2,"invoca_desde":3,
+     "regenera":0.05,"onda":150,"onda_daño":16},
+    {"nombre":"LA ÚLTIMA PLACA","camisa":(110,50,170),"gorro":(190,70,230),
+     "vel":1.15,"daño":2,"salto":0.85,"disparo_desde":1,"invoca_desde":1,
+     "regenera":0.1,"onda":125,"onda_daño":10},
 ]
 
 PERSONAJES = [
@@ -593,9 +770,9 @@ PERSONAJES = [
     {"nombre":"Alexis","color":AZUL,"desc":"Explorador veloz"},
     {"nombre":"Roberto","color":NARANJA,"desc":"Fuerza bruta"},
     {"nombre":"Daniel","color":CIAN,"desc":"Táctico preciso"},
+    {"nombre":"Valeria","color":(86,209,159),"desc":"Superviviente decidida"},
 ]
 
-# ============ HISTORIA ============
 def preparar_historia():
     global INTRO, DESCUBRIMIENTO, ESCENAS_HISTORIA, voz_final
     idx = seleccionados[:2 if coop else 1]
@@ -604,8 +781,8 @@ def preparar_historia():
     buscados = ", ".join(ausentes[:-1])+" y "+ausentes[-1] if len(ausentes)>1 else ausentes[0]
     voz_final = ausentes[0]
     INTRO = [
-        {"titulo":"ANTES DEL APOCALIPSIS","texto":["Obed, Alexis, Roberto y Daniel","regresan de una misión.","Un reporte anuncia una enfermedad."],"color":(35,45,65)},
-        {"titulo":"EL BROTE","texto":["Los hospitales colapsan.","Los cuatro compañeros reciben","una llamada urgente."],"color":(65,30,35)},
+        {"titulo":"ANTES DEL APOCALIPSIS","texto":["Obed, Alexis, Roberto, Daniel y Valeria","regresan de una misión.","Un reporte anuncia una enfermedad."],"color":(35,45,65)},
+        {"titulo":"EL BROTE","texto":["Los hospitales colapsan.","Los cinco compañeros reciben","una llamada urgente."],"color":(65,30,35)},
         {"titulo":"LA PROMESA","texto":["Preparan su equipo.","«Pase lo que pase,","volveremos a encontrarnos.»"],"color":(55,35,55)},
         {"titulo":"LA CIUDAD CAE","texto":["Los infectados desbordan las defensas.","Los compañeros quedan","separados entre el caos."],"color":(55,30,30)},
         {"titulo":"EL PUNTO DE REUNIÓN","texto":[f"{activos}: la búsqueda comienza.","El refugio está vacío.","Solo quedan suministros y una radio."],"color":(30,35,45)},
@@ -621,9 +798,9 @@ def preparar_historia():
 
 preparar_historia()
 
-# ============ VARIABLES ============
 jugadores, zombies, balas, monedas, botiquines, particulas, obstaculos = [],[],[],[],[],[],[]
 sangre_piso = []
+sangre_muro = []
 monedas_obtenidas = 0
 tiempo_restante = 0
 tiempo_extraccion = 0
@@ -636,16 +813,13 @@ jefe_actual = None
 jefe_alertado = False
 daño_nivel = False
 
-# ============ MAPA TIPO ISAAC ============
-# Cada sala ocupa una pantalla; las puertas conectan salas vecinas.
 INTERIOR_X0, INTERIOR_X1 = 40, ANCHO-40
 INTERIOR_Y0, INTERIOR_Y1 = 115, ALTO-40
 MID_X, MID_Y = ANCHO//2, (INTERIOR_Y0+INTERIOR_Y1)//2
-ANCHO_PUERTA = 80
+ANCHO_PUERTA = 96
 DIRS_SALA = {"N":(0,-1),"S":(0,1),"O":(-1,0),"E":(1,0)}
 PUERTA_POS = {"N":(MID_X,INTERIOR_Y0),"S":(MID_X,INTERIOR_Y1),
               "O":(INTERIOR_X0,MID_Y),"E":(INTERIOR_X1,MID_Y)}
-# Punto de aparición al entrar por la puerta opuesta de la sala nueva.
 SPAWN_PUERTA = {"N":(MID_X,INTERIOR_Y1-55),"S":(MID_X,INTERIOR_Y0+55),
                 "O":(INTERIOR_X1-55,MID_Y),"E":(INTERIOR_X0+55,MID_Y)}
 def rect_puerta(d):
@@ -659,59 +833,93 @@ sala_actual = None
 transicion = None
 actualizar_mandos()
 
-# ============ EFECTOS ============
 def shake(i=10): efectos["shake"] = i
 def flash(c=BLANCO,d=10): efectos["flash"]=d; efectos["flash_color"]=c
 
-# ============ DIBUJADO DE FONDO CON GRADIENTE ============
 def crear_fondo_gradiente(tema):
-    surf = pg.Surface((ANCHO,ALTO))
-    color = tema["fondo"]
-    for y in range(ALTO):
-        factor = y/ALTO
-        r = int(color[0]*(0.7+0.5*factor))
-        g = int(color[1]*(0.7+0.5*factor))
-        b = int(color[2]*(0.7+0.5*factor))
-        pg.draw.line(surf,(min(r,255),min(g,255),min(b,255)),(0,y),(ANCHO,y))
-    # Cuadrícula
-    for x in range(0,ANCHO,60):
-        pg.draw.line(surf,tuple(max(0,c-15) for c in color),(x,80),(x,ALTO),1)
-    for y in range(80,ALTO,60):
-        pg.draw.line(surf,tuple(max(0,c-15) for c in color),(0,y),(ANCHO,y),1)
-    # Viñeta
-    v = pg.Surface((ANCHO,ALTO),pg.SRCALPHA)
-    for i in range(150):
-        pg.draw.rect(v,(0,0,0,int(i*0.35)),(i,i,ANCHO-i*2,ALTO-i*2),1)
-    surf.blit(v,(0,0))
-    return surf
-
-fondos_cache = {}
+    cx,cy=(sala_actual.cx,sala_actual.cy) if sala_actual else (0,0)
+    return graficos.suelo(tema['nombre'],tema['fondo'],tema['acento'],cx,cy,ANCHO,ALTO)
 
 def dibujar_fondo(tema):
-    k = tema["nombre"]
-    if k not in fondos_cache:
-        fondos_cache[k] = crear_fondo_gradiente(tema)
-    pantalla.blit(fondos_cache[k],(0,0))
+    pantalla.blit(crear_fondo_gradiente(tema),(0,0))
+    if nivel_actual in (0,1) and CITY_SIDEWALK_TILE:
+        anterior=pantalla.get_clip()
+        interior=pg.Rect(INTERIOR_X0,INTERIOR_Y0,INTERIOR_X1-INTERIOR_X0,INTERIOR_Y1-INTERIOR_Y0)
+        pantalla.set_clip(interior)
+        for y in range(INTERIOR_Y0-8,INTERIOR_Y1,132):
+            for x in range(INTERIOR_X0-8,INTERIOR_X1,174):
+                pantalla.blit(CITY_SIDEWALK_TILE,(x,y))
+        piso= CITY_OLD_TILE if nivel_actual==0 and CITY_OLD_TILE else CITY_ROAD_TILE
+        if piso:
+            calle_v=380 if nivel_actual==0 else 290
+            calle_h=340 if nivel_actual==0 else 240
+            for zona in (pg.Rect(MID_X-calle_v//2,INTERIOR_Y0,calle_v,INTERIOR_Y1-INTERIOR_Y0),
+                         pg.Rect(INTERIOR_X0,MID_Y-calle_h//2,INTERIOR_X1-INTERIOR_X0,calle_h)):
+                pantalla.set_clip(interior.clip(zona))
+                for y in range(zona.top-8,zona.bottom,132):
+                    for x in range(zona.left-8,zona.right,174):
+                        pantalla.blit(piso,(x,y))
+        if nivel_actual==1 and CITY_LANE_TILE:
+            for zona,textura in ((pg.Rect(MID_X-145,INTERIOR_Y0,290,INTERIOR_Y1-INTERIOR_Y0),CITY_LANE_TILE),
+                                 (pg.Rect(INTERIOR_X0,MID_Y-120,INTERIOR_X1-INTERIOR_X0,240),CITY_LANE_H_TILE)):
+                pantalla.set_clip(interior.clip(zona))
+                step_x,step_y=(174,132) if textura is CITY_LANE_TILE else (132,174)
+                for y in range(zona.top-8,zona.bottom,step_y):
+                    for x in range(zona.left-8,zona.right,step_x): pantalla.blit(textura,(x,y))
+        pantalla.set_clip(anterior)
 
-# ============ DIBUJAR CLIMA ============
 clima_particulas = []
+relampagos = []
+
+def _rayo_lado(lado):
+    x_base = 24 if lado == "O" else ANCHO - 24
+    pts = []
+    y = random.uniform(INTERIOR_Y0 - 20, INTERIOR_Y0)
+    while y < ALTO - 40:
+        pts.append((x_base + random.uniform(-30, 30), y))
+        y += random.uniform(45, 95)
+    return pts
+
+def dibujar_relampagos():
+    for r in relampagos[:]:
+        r["t"] -= 1
+        if r["t"] <= 0:
+            relampagos.remove(r)
+            continue
+        alfa = int(225 * (r["t"] / 9))
+        capa = pg.Surface((ANCHO, ALTO), pg.SRCALPHA)
+        for pts in r["rayos"]:
+            pg.draw.lines(capa, (205, 225, 255, alfa), False, pts, 6)
+            pg.draw.lines(capa, (255, 255, 255, min(255, alfa + 30)), False, pts, 2)
+        graficos.luz(pantalla, pts[0], 120, (150, 170, 220))
+        pantalla.blit(capa, (0, 0))
 
 def actualizar_clima(tema):
     global clima_particulas
     tipo = tema["clima"]
-    # Spawn
     if tipo == "lluvia":
-        for _ in range(8): clima_particulas.append({"x":random.randint(0,ANCHO),"y":-10,"vx":-2,"vy":14,"t":0,"tipo":"lluvia"})
+        for _ in range(8): clima_particulas.append({"x":random.randint(0,ANCHO),"y":-10,"vx":-2,"vy":14,"t":0,"tipo":"lluvia","suelo":random.randint(INTERIOR_Y0+50,ALTO-60)})
     elif tipo == "tormenta":
-        for _ in range(12): clima_particulas.append({"x":random.randint(0,ANCHO),"y":-10,"vx":-3,"vy":18,"t":0,"tipo":"lluvia"})
+        for _ in range(12): clima_particulas.append({"x":random.randint(0,ANCHO),"y":-10,"vx":-3,"vy":18,"t":0,"tipo":"lluvia","suelo":random.randint(INTERIOR_Y0+50,ALTO-60)})
         if random.random() < 0.005: flash(BLANCO,15); play(S_TRUENO,espera=1500)
+    if tipo in ("lluvia", "tormenta") and random.random() < 0.004:
+        lado = random.choice(("O", "E"))
+        rayos = [_rayo_lado("O"), _rayo_lado("E")] if random.random() < 0.3 else [_rayo_lado(lado)]
+        relampagos.append({"t": 9, "rayos": rayos})
+        flash(BLANCO, 9); play(S_TRUENO, espera=1200)
     elif tipo == "tormenta_arena":
         for _ in range(6): clima_particulas.append({"x":random.randint(0,ANCHO),"y":random.randint(80,ALTO),"vx":-6,"vy":random.uniform(-1,1),"t":0,"tipo":"arena"})
     elif tipo == "niebla":
         for _ in range(2): clima_particulas.append({"x":random.randint(0,ANCHO),"y":random.randint(80,ALTO),"vx":random.uniform(-0.5,0.5),"vy":random.uniform(-0.3,0.3),"t":0,"tipo":"niebla"})
-    # Update
     for p in clima_particulas[:]:
         p["x"] += p["vx"]; p["y"] += p["vy"]; p["t"] += 1
+        if p["tipo"] == "lluvia":
+            suelo = p.get("suelo", ALTO+20)
+            if p["y"] >= suelo:
+                for _ in range(3):
+                    particulas.append(Particula(p["x"],suelo,(150,180,230),3,9))
+                clima_particulas.remove(p)
+                continue
         if p["y"]>ALTO+20 or p["x"]<-20 or p["t"]>300:
             clima_particulas.remove(p)
 
@@ -720,15 +928,41 @@ def dibujar_clima():
         if p["tipo"] == "lluvia":
             pg.draw.line(pantalla,(120,150,200,180),(p["x"],p["y"]),(p["x"]+2,p["y"]+10),1)
         elif p["tipo"] == "arena":
-            s = pg.Surface((4,4),pg.SRCALPHA)
-            pg.draw.circle(s,(200,180,120,100),(2,2),2)
+            s = circulo_cache(2,(200,180,120,100))
             pantalla.blit(s,(p["x"],p["y"]))
         elif p["tipo"] == "niebla":
-            s = pg.Surface((80,80),pg.SRCALPHA)
-            pg.draw.circle(s,(180,180,190,20),(40,40),40)
+            s = circulo_cache(40,(180,180,190,20))
             pantalla.blit(s,(p["x"]-40,p["y"]-40))
+    dibujar_relampagos()
 
-# ============ CLASES ============
+def dibujar_luces():
+    oscuro=pg.Surface((ANCHO,ALTO),pg.SRCALPHA)
+    oscuro.fill((8,10,18,70))
+    pantalla.blit(oscuro,(0,0))
+    for j in jugadores:
+        if j.vida<=0: continue
+        dx,dy=j.direccion
+        graficos.luz(pantalla,(j.x+dx*44,j.y-12+dy*44),95,(150,155,170))
+        if j.destello>0:
+            graficos.luz(pantalla,(j.x+dx*46,j.y-12+dy*46),85,(255,180,62))
+    for b in balas:
+        graficos.luz(pantalla,(b.x,b.y),60,(120,140,220))
+    if jefe_actual and jefe_actual.esta_vivo():
+        ritmo=int(abs(math.sin(pg.time.get_ticks()/280))*20)
+        graficos.luz(pantalla,(jefe_actual.x,jefe_actual.y),125+ritmo,(95,30,40))
+        if jefe_actual.cargando>0:
+            graficos.luz(pantalla,jefe_actual.obj_salto,95,(140,60,50))
+    for m in monedas[:12]: graficos.luz(pantalla,(m.x,m.y),26,(120,88,28))
+    for bo in botiquines: graficos.luz(pantalla,(bo.x,bo.y),32,(36,120,70))
+    for p in particulas:
+        if isinstance(p,PowerUp): graficos.luz(pantalla,(p.x,p.y),40,tuple(int(c*0.7) for c in {"velocidad":CIAN,"escudo":(100,200,255),"daño":ROJO,"vida":VERDE}.get(p.tipo,BLANCO)))
+    if sala_actual and sala_actual.trampilla:
+        graficos.luz(pantalla,sala_actual.trampilla,80,(60,150,90))
+
+def sombra_tocada(surf,x,y,ancho,alto,color=(0,0,0,90)):
+    s=sombra_cache(ancho,alto,color)
+    surf.blit(s,(round(x-ancho//2),round(y-alto//3)))
+
 class Jugador:
     def __init__(self,x,y,num,color,ji):
         self.x,self.y=x,y
@@ -753,9 +987,14 @@ class Jugador:
     def mover(self,dx,dy):
         if self.vida<=0 or (dx==0 and dy==0): return
         m=math.hypot(dx,dy); dx,dy=dx/m,dy/m
+        anterior_x,anterior_y=self.x,self.y
         mover_col(self,dx*self.velocidad,dy*self.velocidad)
-        self.direccion=(dx,dy); self.anim+=0.25
-        self.ultimo_movimiento=pg.time.get_ticks()
+        self.direccion=(dx,dy)
+        distancia=math.hypot(self.x-anterior_x,self.y-anterior_y)
+        if distancia>0.01:
+            # Acompaña el desplazamiento y se para ante paredes.
+            self.anim=(self.anim+distancia/DISTANCIA_CICLO_CAMINATA)%1.0
+            self.ultimo_movimiento=pg.time.get_ticks()
         if dx: self.mira_izquierda=dx<0
 
     def disparar(self):
@@ -769,11 +1008,11 @@ class Jugador:
         offsets=[0] if self.arma==0 else [-0.18,0,0.18]
         for off in offsets:
             ax,ay=math.cos(ang+off),math.sin(ang+off)
-            balas.append(Bala(self.x+ax*(46 if self.arma else 37),self.y+ay*(46 if self.arma else 37),ax,ay))
+            balas.append(Bala(self.x+ax*(46 if self.arma else 37),self.y-12+ay*(46 if self.arma else 37),ax,ay))
         for b in balas[inicio_balas:]: b.dano=20+5*mejoras[self.num-1]["dano"]
-        play(S_DISPARO if self.arma==0 else S_ESCOPETA)
+        play(S_DISPARO)
         for _ in range(6):
-            particulas.append(Particula(self.x+dx*(46 if self.arma else 37),self.y+dy*(46 if self.arma else 37),AMARILLO,4,10))
+            particulas.append(Particula(self.x+dx*(46 if self.arma else 37),self.y-12+dy*(46 if self.arma else 37),AMARILLO,4,10))
 
     def golpear(self):
         if self.vida<=0 or self.tiempo_melee>0: return
@@ -830,57 +1069,53 @@ class Jugador:
             pg.draw.line(surf,GRIS_CLARO,(self.x+14,self.y-14),(self.x-14,self.y+14),4)
             return
         if self.invencible>0 and (self.invencible//5)%2==0: return
-        # Escudo
         if self.escudo>0:
             pulso=abs(math.sin(pg.time.get_ticks()/150))*5
             s=pg.Surface((int((self.radio+pulso)*4),int((self.radio+pulso)*4)),pg.SRCALPHA)
             pg.draw.circle(s,(100,200,255,80),(int((self.radio+pulso)*2),int((self.radio+pulso)*2)),int(self.radio+pulso))
             surf.blit(s,(self.x-(self.radio+pulso)*2,self.y-(self.radio+pulso)*2))
-        # Sombra
-        som=pg.Surface((self.radio*2+16,self.radio+12),pg.SRCALPHA)
-        pg.draw.ellipse(som,(0,0,0,120),(0,0,self.radio*2+16,self.radio))
+        som=sombra_cache(self.radio*2+16,self.radio,(0,0,0,120))
         surf.blit(som,(self.x-self.radio-8,self.y+self.radio-5))
-        # Aura
-        aura=pg.Surface((self.radio*5,self.radio*5),pg.SRCALPHA)
-        pg.draw.circle(aura,(*self.color,25),(int(self.radio*2.5),int(self.radio*2.5)),int(self.radio*1.8))
-        surf.blit(aura,(self.x-self.radio*2.5,self.y-self.radio*2.5))
+        radio_aura=int(self.radio*1.8)
+        aura=circulo_cache(radio_aura,(*self.color,25))
+        surf.blit(aura,(self.x-radio_aura,self.y-radio_aura))
         caminando=pg.time.get_ticks()-self.ultimo_movimiento<80
-        fase=int(self.anim*1.4)%4 if caminando else 1
+        fase=int(self.anim*len(PASOS[self.sprite_indice]))%len(PASOS[self.sprite_indice]) if caminando else 0
         im=PASOS[self.sprite_indice][fase][int(self.mira_izquierda)]
         if not caminando:
-            # Descanso con ambos pies apoyados: retrato aprobado original.
             im=IDLE_HEROES[self.sprite_indice][int(self.mira_izquierda)]
         im=aplicar_skin(im,self.sprite_indice)
+        if self.vida>0 and self.direccion[1]<-0.6 and abs(self.direccion[0])<0.3:
+            dibujar_arma(surf,self)
         surf.blit(im,im.get_rect(midbottom=(round(self.x),round(self.y+18))))
-        dibujar_arma(surf,self)
-        # Nombre
+        if not (self.vida>0 and self.direccion[1]<-0.6 and abs(self.direccion[0])<0.3):
+            dibujar_arma(surf,self)
         t=fuente_peq.render(f"P{self.num} {self.nombre}",True,BLANCO)
         surf.blit(t,t.get_rect(center=(self.x,self.y-76)))
-        # Barra vida
         ab=48; xb=self.x-ab//2; yb=self.y-94
         pg.draw.rect(surf,GRIS_OSCURO,(xb-1,yb-1,ab+2,8),border_radius=3)
         av=int(ab*max(0,min(self.vida,self.vida_max))/self.vida_max)
         cv=VERDE if self.vida>60 else AMARILLO if self.vida>30 else ROJO
         pg.draw.rect(surf,cv,(xb,yb,av,6),border_radius=2)
-        # Barra energía
         ye=yb+9
         pg.draw.rect(surf,GRIS_OSCURO,(xb-1,ye-1,ab+2,5),border_radius=2)
         ee=int(ab*self.energia/100)
         pg.draw.rect(surf,CIAN,(xb,ye,ee,3),border_radius=1)
 
-
 SPRITES_ZOMBIS = {}
 
-
-def crear_sprite_zombi(tipo, fase, ataque=False, jefe=False):
-    """Caricatura vectorial original, dibujada al doble para suavizar bordes."""
+def crear_sprite_zombi(tipo, fase, ataque=False, jefe=False, camisa_jefe=None, gorro_jefe=None):
     lienzo=pg.Surface((192,224),pg.SRCALPHA)
     borde=(24,28,23)
     piel={"normal":(118,163,69),"rapido":(138,186,86),"tanque":(107,141,61),
           "escupe":(144,177,63),"explosivo":(125,158,65)}.get(tipo,(118,163,69))
     camisa={"normal":(92,108,137),"rapido":(107,79,105),"tanque":(215,154,43),
             "escupe":(128,97,60),"explosivo":(177,75,48)}.get(tipo,(92,108,137))
-    if jefe: camisa=(134,44,50)
+    if jefe: camisa=camisa_jefe or (134,44,50)
+    gorro=(208,103,115)
+    if jefe: gorro=gorro_jefe or gorro
+    oscuro=tuple(int(c*0.47) for c in gorro)
+    claro=tuple(min(255,int(c*1.25)) for c in gorro)
     paso=math.sin(fase*math.tau/8)
     salto=abs(paso)*2 if not ataque else 2
     def puntos(ps): return [(round(x*2),round((y-salto)*2)) for x,y in ps]
@@ -891,19 +1126,15 @@ def crear_sprite_zombi(tipo, fase, ataque=False, jefe=False):
         pg.draw.ellipse(lienzo,color,rect)
         if contorno:pg.draw.ellipse(lienzo,borde,rect,contorno*2)
     def linea(color,ps,ancho=2): pg.draw.lines(lienzo,color,False,puntos(ps),ancho*2)
-    # Botas y piernas alternadas.
     for x,oscilacion in [(38,paso*4),(55,-paso*4)]:
         pol((76,64,50),[(x,83),(x+10,83),(x+10+oscilacion,100),(x+oscilacion,100)])
         el((44,43,39),(x-3+oscilacion,96,19,9),2)
-    # Brazo lejano extendido.
     alcance=8 if ataque else paso*2
     linea(borde,[(57,68),(72,65),(80+alcance,60)],9)
     linea(piel,[(57,68),(72,65),(80+alcance,60)],5)
-    # Camisa rasgada, cuello y costura.
     pol(camisa,[(33,57),(58,57),(65,78),(62,92),(55,89),(50,94),(44,90),(32,92),(30,72)])
     linea((55,57,47),[(45,66),(47,87)],2)
     pol(piel,[(35,86),(44,88),(36,92)])
-    # Oreja y cabeza grande inclinada: ojos desiguales y mandíbula.
     el(piel,(18,41,18,19),2)
     el(piel,(24,16,51,51),3)
     linea((71,100,43),[(26,48),(22,47),(23,53)],2)
@@ -916,7 +1147,6 @@ def crear_sprite_zombi(tipo, fase, ataque=False, jefe=False):
     pol((239,223,167),[(51,57),(56,56),(56,61),(51,62)])
     linea((66,101,43),[(32,31),(39,29)],2)
     el((78,113,42),(31,52,4,3),0)
-    # Variantes reconocibles como en la referencia.
     if tipo in ("normal","rapido") and not jefe:
         pol((48,43,36),[(25,40),(20,25),(23,15),(28,20),(39,7),(39,16),
                        (52,8),(71,17),(78,27),(62,25),(53,21),(54,29),(37,26),(35,44)])
@@ -927,11 +1157,10 @@ def crear_sprite_zombi(tipo, fase, ataque=False, jefe=False):
         linea((251,216,92),[(46,15),(43,29)],4)
         el((111,86,45),(27,19,11,8),2)
     else:
-        el((208,103,115),(29,10,37,27),3)
-        linea((94,43,51),[(39,14),(44,18),(39,23),(46,26),(43,33)],2)
-        linea((94,43,51),[(52,13),(49,20),(57,25),(53,31)],2)
-        if jefe: linea((228,157,163),[(32,19),(36,16)],2)
-    # Brazo cercano con dedos, balanceo al andar y extensión al atacar.
+        el(gorro,(29,10,37,27),3)
+        linea(oscuro,[(39,14),(44,18),(39,23),(46,26),(43,33)],2)
+        linea(oscuro,[(52,13),(49,20),(57,25),(53,31)],2)
+        if jefe: linea(claro,[(32,19),(36,16)],2)
     hx=72+alcance;hy=76+(0 if ataque else paso*2)
     linea(borde,[(36,69),(47,77),(hx,hy)],10)
     linea(camisa,[(36,69),(46,76)],7)
@@ -943,13 +1172,14 @@ def crear_sprite_zombi(tipo, fase, ataque=False, jefe=False):
     if tipo=="escupe": el((169,213,56),(65,62,4,9),1)
     return lienzo
 
-
 def sprite_zombi(z):
     fase=int(z.anim*2)%8
     ataque=z.tiempo_ataque>25
-    clave=(z.tipo,z.es_jefe,fase,ataque,z.mira_izquierda)
+    clave=(z.tipo,z.es_jefe,fase,ataque,z.mira_izquierda,
+           getattr(z,"camisa",None),getattr(z,"gorro",None))
     if clave not in SPRITES_ZOMBIS:
-        original=crear_sprite_zombi(z.tipo,fase,ataque,z.es_jefe)
+        original=crear_sprite_zombi(z.tipo,fase,ataque,z.es_jefe,
+                                    getattr(z,"camisa",None),getattr(z,"gorro",None))
         ancho=150 if z.es_jefe else 83 if z.tipo=="tanque" else 70
         alto=round(ancho*224/192)
         img=pg.transform.smoothscale(original,(ancho,alto))
@@ -957,13 +1187,19 @@ def sprite_zombi(z):
         SPRITES_ZOMBIS[clave]=img
     return SPRITES_ZOMBIS[clave]
 
-
 def dibujar_zombi_animado(z,surf):
     img=sprite_zombi(z)
-    sombra=pg.Surface((z.radio*3,20),pg.SRCALPHA)
-    pg.draw.ellipse(sombra,(0,0,0,95),sombra.get_rect())
+    altura=getattr(z,"altura",0)
+    if altura>30:
+        sombra=sombra_cache(z.radio*2,14,(0,0,0,70))
+    else:
+        sombra=sombra_cache(z.radio*3,20,(0,0,0,95))
     surf.blit(sombra,(round(z.x-sombra.get_width()/2),round(z.y+z.radio-8)))
-    rect=img.get_rect(midbottom=(round(z.x),round(z.y+z.radio+5)))
+    if z.es_jefe:
+        ancho=int(z.radio*4.4); alto=int(z.radio*1.3)
+        som=sombra_cache(ancho,alto,(0,0,0,60))
+        surf.blit(som,(round(z.x-ancho//2),round(z.y-alto//3+2)))
+    rect=img.get_rect(midbottom=(round(z.x),round(z.y+z.radio+5-int(altura))))
     surf.blit(img,rect)
     if z.vida<z.vida_max or z.es_jefe:
         ab=100 if z.es_jefe else 42
@@ -971,9 +1207,9 @@ def dibujar_zombi_animado(z,surf):
         pg.draw.rect(surf,GRIS_OSCURO,(x-1,y-1,ab+2,7),border_radius=3)
         pg.draw.rect(surf,ROJO,(x,y,round(ab*max(0,min(1,z.vida/z.vida_max))),5),border_radius=2)
         if z.es_jefe:
-            txt=fuente_peq.render("JEFE",True,ROJO)
+            nombre=getattr(z,"nombre","") or "JEFE"
+            txt=fuente_peq.render(nombre,True,ROJO)
             surf.blit(txt,txt.get_rect(midbottom=(round(z.x),y-4)))
-
 
 class Zombie:
     def __init__(self,x,y,tipo=None):
@@ -981,6 +1217,7 @@ class Zombie:
         self.radio=16
         self.velocidad=random.uniform(0.8,1.6)
         self.vida=30; self.vida_max=30
+        self.esquivando=0; self.rodeo=0
         self.daño=8; self.tiempo_ataque=0
         self.tipo=tipo or random.choice(["normal","normal","rapido","tanque","escupe","explosivo"])
         self.anim=random.uniform(0,6.28)
@@ -997,6 +1234,30 @@ class Zombie:
             self.velocidad*=1.2; self.vida=25; self.radio=18
         self.vida_max=self.vida
 
+    def _girar(self,ux,uy,ang):
+        c,s=math.cos(ang),math.sin(ang)
+        return ux*c-uy*s,ux*s+uy*c
+
+    def _tranca(self,px,py):
+        return not libre(px,py,self.radio+3)
+
+    def _camino_bloqueado(self,ux,uy,alcance):
+        for k in (0.3,0.6,1.0):
+            d=(self.radio+16+k*alcance)
+            if self._tranca(self.x+ux*d,self.y+uy*d): return True
+        return False
+
+    def _elegir_lado(self,ux,uy):
+        def despeje(l):
+            x,y=self._girar(ux,uy,l*0.9)
+            for k,m in ((0.6,60),(1.0,110),(1.6,170)):
+                if self._tranca(self.x+ux*m,y+uy*m) or self._tranca(self.x+x*60,y+y*60):
+                    return k
+            return 2.0
+        a,b=despeje(1),despeje(-1)
+        if a==b: return self.esquivando or random.choice((1,-1))
+        return 1 if a>b else -1
+
     def update(self,jugs,obs):
         vivos=[j for j in jugs if j.vida>0]
         if not vivos or self.vida<=0: return
@@ -1007,9 +1268,24 @@ class Zombie:
         self.anim+=0.15 if d<500 else 0.025
         if self.tiempo_ataque>0: self.tiempo_ataque-=1
         if self.cooldown_habilidad>0: self.cooldown_habilidad-=1
+        if self.rodeo>0: self.rodeo-=1
         if d<500:
             if d>self.radio+obj.radio+2:
-                mover_col(self,dx/d*self.velocidad,dy/d*self.velocidad)
+                ux,uy=dx/d,dy/d
+                if self._camino_bloqueado(ux,uy,150):
+                    if self.rodeo<=0:
+                        self.esquivando=self._elegir_lado(ux,uy)
+                        self.rodeo=random.randint(35,60)
+                    ux,uy=self._girar(ux,uy,self.esquivando*0.95)
+                elif self.rodeo<=0:
+                    self.esquivando=0
+                px,py=self.x,self.y
+                mover_col(self,ux*self.velocidad,uy*self.velocidad)
+                if math.hypot(self.x-px,self.y-py)<0.4 and self.rodeo<=0:
+                    self.esquivando=-self.esquivando or random.choice((1,-1))
+                    self.rodeo=random.randint(30,55)
+                    ux,uy=self._girar(dx/d,dy/d,self.esquivando*1.1)
+                    mover_col(self,ux*self.velocidad,uy*self.velocidad)
             elif self.tiempo_ataque<=0:
                 if self.tipo=="explosivo":
                     self.explotar(); return
@@ -1031,33 +1307,261 @@ class Zombie:
     def dibujar(self,surf):
         dibujar_zombi_animado(self,surf)
 
+class PerroZombie(Zombie):
+    """Can de asalto infectado: veloz, resistente y de ataque cercano."""
+    def __init__(self,x,y,nivel=3):
+        super().__init__(x,y,"rapido")
+        self.tipo="perro"
+        self.radio=13
+        self.vida=38+max(0,nivel-3)*5
+        self.vida_max=self.vida
+        self.velocidad=2.45+max(0,nivel-3)*0.12
+        self.daño=13+max(0,nivel-3)*2
+        self.direccion=(1.0,0.0)
+
+    def update(self,jugs,obs):
+        vivos=[j for j in jugs if j.vida>0]
+        if vivos:
+            obj=min(vivos,key=lambda j:math.hypot(j.x-self.x,j.y-self.y))
+            dx,dy=obj.x-self.x,obj.y-self.y
+            d=max(1,math.hypot(dx,dy))
+            self.direccion=(dx/d,dy/d)
+            self.mira_izquierda=dx<0
+        super().update(jugs,obs)
+
+    def dibujar(self,surf):
+        fase=math.sin(self.anim*2.4)
+        lienzo=pg.Surface((88,64),pg.SRCALPHA)
+        oscuro=(29,34,29); piel=(91,112,70); claro=(126,137,83)
+        # Cola rota, lomo encorvado y patas en carrera.
+        pg.draw.lines(lienzo,oscuro,False,[(24,31),(13,24+int(fase*2)),(8,27)],6)
+        pg.draw.ellipse(lienzo,oscuro,(20,22,48,29))
+        pg.draw.ellipse(lienzo,piel,(23,24,43,23))
+        pg.draw.polygon(lienzo,oscuro,[(55,24),(65,14),(79,17),(85,24),(81,32),(66,36),(57,34)])
+        pg.draw.polygon(lienzo,claro,[(59,24),(68,18),(78,20),(81,25),(77,30),(65,31)])
+        pg.draw.polygon(lienzo,oscuro,[(66,18),(62,8),(72,14)])
+        pg.draw.polygon(lienzo,oscuro,[(75,18),(82,12),(81,22)])
+        pg.draw.ellipse(lienzo,(200,51,42),(72,21,5,5))
+        pg.draw.ellipse(lienzo,(255,199,103),(73,22,2,2))
+        pg.draw.polygon(lienzo,(34,30,28),[(75,29),(85,27),(83,32),(76,34)])
+        pg.draw.line(lienzo,(231,222,187),(79,30),(81,34),2)
+        pg.draw.line(lienzo,(231,222,187),(84,29),(84,32),2)
+        # Collar militar rasgado y placa metálica.
+        pg.draw.line(lienzo,(71,78,49),(58,25),(62,33),5)
+        pg.draw.circle(lienzo,(190,154,74),(62,34),3)
+        for x0,offset in ((31,-1),(53,1)):
+            pg.draw.line(lienzo,oscuro,(x0,39),(x0-3,52),6)
+            pg.draw.line(lienzo,piel,(x0,39),(x0-3,52),3)
+            pg.draw.line(lienzo,oscuro,(x0+14,39),(x0+17,51-int(fase*4*offset)),6)
+            pg.draw.line(lienzo,piel,(x0+14,39),(x0+17,51-int(fase*4*offset)),3)
+        angulo=-math.degrees(math.atan2(self.direccion[1],self.direccion[0]))
+        imagen=pg.transform.rotate(lienzo,angulo)
+        sombra=sombra_cache(48,13,(0,0,0,110))
+        surf.blit(sombra,(round(self.x-sombra.get_width()/2),round(self.y+7)))
+        surf.blit(imagen,imagen.get_rect(center=(round(self.x),round(self.y))))
+        if self.vida<self.vida_max:
+            ancho=38; bx=round(self.x-ancho/2); by=round(self.y-25)
+            pg.draw.rect(surf,GRIS_OSCURO,(bx-1,by-1,ancho+2,6),border_radius=3)
+            pg.draw.rect(surf,ROJO,(bx,by,round(ancho*max(0,self.vida/self.vida_max)),4),border_radius=2)
 
 class Jefe(Zombie):
-    def __init__(self,x,y):
+    def __init__(self,x,y,nivel=0):
+        self.nivel=nivel
+        t=JEFE_TEMAS[nivel]
+        self.nombre=t["nombre"]
+        self.camisa=t["camisa"]; self.gorro=t["gorro"]
+        self.bono_daño=t["daño"]; self.disparo_desde=t["disparo_desde"]
+        self.invoca_desde=t["invoca_desde"]; self.regenera=t["regenera"]
+        self.onda=t["onda"]; self.onda_daño=t["onda_daño"]
+        self.salto_mult=t["salto"]
         super().__init__(x,y,"tanque")
-        self.vida=500; self.vida_max=500
+        self.vida=750; self.vida_max=750
         self.radio=45; self.daño=20
         self.es_jefe=True
-        self.velocidad=0.8
+        self.velocidad=1.1
+        self.velocidad_base=self.velocidad*t["vel"]
         self.fase=1
         self.anim_ataque=0
+        self.ultima=(x,y); self.penultima=(x,y)
+        self.obj_salto=(x,y)
+        self.cargando=0; self.carga_max=98
+        self.vuelo=0; self.vuelo_total=0; self.alto_salto=0
+        self.altura=0
+        self.origen=(x,y); self.modo_salto="brinco"
+        self.cooldown_salto=150
+        self.cooldown_disparo=120
+        self.cooldown_habilidad=0
+        self.pensando=0
+        self.cooldown_pensar=420
+
+    def _objetivo(self,jugs):
+        vivos=[j for j in jugs if j.vida>0]
+        if not vivos: return None
+        return min(vivos,key=lambda j:math.hypot(j.x-self.x,j.y-self.y))
+
+    def _punto_predicho(self):
+        vx=max(-150,min(150,(self.ultima[0]-self.penultima[0])*8))
+        vy=max(-150,min(150,(self.ultima[1]-self.penultima[1])*8))
+        tx=self.ultima[0]+vx
+        ty=self.ultima[1]+vy
+        return (min(max(tx,INTERIOR_X0+60),INTERIOR_X1-60),
+                min(max(ty,INTERIOR_Y0+60),INTERIOR_Y1-60))
+
+    def saltar(self):
+        px,py=self.obj_salto
+        d=math.hypot(px-self.x,py-self.y)
+        if d>420:
+            self.modo_salto="teletransporte"
+            self.vuelo_total=16
+            self.alto_salto=150
+            play(S_PUERTA_ABIERTA)
+            for _ in range(14):
+                particulas.append(Particula(self.x+random.randint(-30,30),self.y+random.randint(-50,10),MORADO,5,22))
+        else:
+            self.modo_salto="brinco"
+            self.vuelo_total=max(20,int(d//14))
+            self.alto_salto=85
+            play(S_SALTO)
+            for _ in range(6):
+                particulas.append(Particula(self.x+random.randint(-20,20),self.y+10,MORADO,3,16))
+        self.origen=(self.x,self.y)
+        if not libre(px,py,self.radio+6):
+            for r in (40,-40,80,-80,120,-120):
+                for a in range(8):
+                    ang=a*0.785
+                    nx,ny=px+math.cos(ang)*r,py+math.sin(ang)*r
+                    if libre(nx,ny,self.radio+6):
+                        px,py=nx,ny; break
+                else: continue
+                break
+        self.obj_salto=(px,py)
+        self.vuelo=self.vuelo_total
+        self.altura=0
+
+    def aterrizar(self):
+        px,py=self.x,self.y
+        if self.modo_salto=="teletransporte":
+            flash(MORADO,8)
+            for _ in range(20):
+                particulas.append(Particula(px+random.randint(-34,34),py+random.randint(-10,50),MORADO,5,26))
+        shake(12); 
+        play(S_HIT)
+        daño=self.daño+self.onda_daño
+        for j in jugadores:
+            if j.vida>0 and math.hypot(j.x-px,j.y-py)<self.onda:
+                j.recibir_daño(daño)
+        for _ in range(28): particulas.append(Particula(px,py,ROJO,7,26))
+        for _ in range(4): sangre_piso.append(SangrePiso(px+random.randint(-25,25),py+random.randint(-20,20)))
+        manchar_pared(px,py,0.8)
+        self.cooldown_salto=[300,240,160][self.fase-1]*self.salto_mult
 
     def update(self,jugs,obs):
         if self.vida<=0 or not any(j.vida>0 for j in jugs): return
+        obj=self._objetivo(jugs)
+        if obj:
+            self.penultima=self.ultima
+            self.ultima=(obj.x,obj.y)
+        if self.vida<self.vida_max*0.25: self.fase=3
+        elif self.vida<self.vida_max*0.5: self.fase=max(self.fase,2)
+        self.velocidad=self.velocidad_base*(1.0+0.35*(self.fase-1))
+        self.daño=[20,24,28][self.fase-1]+self.bono_daño
+        if self.regenera and self.vida<self.vida_max:
+            self.vida=min(self.vida_max,self.vida+self.regenera)
+        for atrib in ("tiempo_ataque","cooldown_habilidad","cooldown_salto","cooldown_disparo","cooldown_pensar"):
+            valor=getattr(self,atrib)
+            if valor>0: setattr(self,atrib,valor-1)
+        if obj:
+            dx,dy=obj.x-self.x,obj.y-self.y
+            d=math.hypot(dx,dy)
+            if abs(dx)>2: self.mira_izquierda=dx<0
+        else:
+            d=10**6
+        if self.vuelo>0:
+            total=self.vuelo_total
+            t=1-self.vuelo/total
+            ox,oy=self.origen; tx,ty=self.obj_salto
+            self.x=ox+(tx-ox)*t
+            self.y=oy+(ty-oy)*t
+            self.altura=math.sin(math.pi*t)*self.alto_salto
+            self.anim+=0.2
+            if self.tiempo_ataque>0: self.tiempo_ataque-=1
+            color=MORADO if self.modo_salto=="teletransporte" else (170,150,100)
+            if random.random()<0.6:
+                particulas.append(Particula(self.x,self.y-max(4,self.altura*0.5),color,3,14))
+            self.vuelo-=1
+            if self.vuelo<=0:
+                self.altura=0
+                self.x,self.y=tx,ty
+                self.aterrizar()
+            return
+        if self.pensando>0:
+            self.pensando-=1
+            self.velocidad=0
+            super().update(jugs,obs)
+            self.velocidad=0
+            if random.random()<0.3:
+                px=self.x+random.uniform(-30,30)
+                particulas.append(Particula(px,self.y-self.radio-30-random.uniform(0,25),(150,200,255),2,20))
+            if self.pensando<=0:
+                self.velocidad=self.velocidad_base*(1.0+0.35*(self.fase-1))
+                if d<520 and self.cooldown_salto<=0 and (d>150 or self.fase>=3):
+                    self.cargando=self.carga_max
+                    self.obj_salto=self._punto_predicho()
+                    play(S_SALTO)
+            return
+        if self.cargando>0:
+            self.cargando-=1
+            vel=self.velocidad; self.velocidad=0
+            super().update(jugs,obs)
+            self.velocidad=vel
+            if self.cargando<=0: self.saltar()
+            return
+        if self.cooldown_pensar<=0:
+            self.pensando=60 if self.fase<3 else 45
+            self.cooldown_pensar=random.uniform(420,720)
+            return
+        if self.cooldown_salto<=0 and d<520 and (d>150 or self.fase>=3):
+            self.carga_max=98 if self.fase<3 else 88
+            self.cargando=self.carga_max
+            self.obj_salto=self._punto_predicho()
+            play(S_SALTO)
+            return
         super().update(jugs,obs)
-        if self.vida<self.vida_max*0.5: self.fase=2
-        if self.fase==2 and self.cooldown_habilidad<=0 and len(zombies)<60:
-            # Invoca zombies
-            for _ in range(2):
+        if self.fase>=self.disparo_desde and self.cooldown_disparo<=0 and 120<d<460:
+            px,py=self._punto_predicho()
+            base=math.atan2(py-self.y,px-self.x)
+            n=4 if self.fase>=3 else 3
+            for i in range(n):
+                ang=base+(i-(n-1)/2)*0.28
+                balas.append(BalaZombie(self.x,self.y,math.cos(ang)*4.5,math.sin(ang)*4.5))
+            self.cooldown_disparo=150 if self.fase==2 else 100
+        if self.fase>=self.invoca_desde and self.cooldown_habilidad<=0 and len(zombies)<60:
+            for _ in range(3 if self.fase>=3 else 2):
                 ang=random.uniform(0,6.28)
                 x,y=self.x+math.cos(ang)*80,self.y+math.sin(ang)*80
                 if libre(x,y,14):
                     zombies.append(Zombie(x,y,"rapido"))
-            self.cooldown_habilidad=180
+            self.cooldown_habilidad=210 if self.fase>=3 else 240
 
     def dibujar(self,surf):
+        if self.pensando>0:
+            banda=int(4*math.sin(pg.time.get_ticks()/180))
+            s=pg.Surface((46,46),pg.SRCALPHA)
+            pg.draw.circle(s,(200,225,255,200),(22,22),17)
+            pg.draw.circle(s,(15,20,30,220),(22,22),17,2)
+            pg.draw.circle(s,(200,225,255,170),(6,36),6)
+            pg.draw.circle(s,(15,20,30,200),(6,36),6,1)
+            surf.blit(s,(round(self.x-22),round(self.y-self.radio-58+banda)))
+            t=fuente_peq.render("?",True,(20,40,70))
+            surf.blit(t,t.get_rect(center=(self.x,self.y-self.radio-58+banda)))
+        if self.cargando>0:
+            frac=1-self.cargando/self.carga_max
+            r=24+int(82*frac)
+            s=pg.Surface((r*2+8,r*2+8),pg.SRCALPHA)
+            pg.draw.circle(s,(255,60,60,int(50+130*frac)),(r+4,r+4),r,4)
+            pg.draw.circle(s,(255,200,80,int(45*frac)),(r+4,r+4),max(8,int(34*frac)))
+            surf.blit(s,(self.obj_salto[0]-r-4,self.obj_salto[1]-r-4))
         dibujar_zombi_animado(self,surf)
-
 
 class Bala:
     def __init__(self,x,y,dx,dy):
@@ -1075,16 +1579,12 @@ class Bala:
         for i,(tx,ty) in enumerate(self.trail):
             alpha=int(255*(i/len(self.trail)))
             tam=max(1,5-(len(self.trail)-i))
-            s=pg.Surface((tam*2,tam*2),pg.SRCALPHA)
-            pg.draw.circle(s,(255,200,80,alpha),(tam,tam),tam)
+            s=circulo_cache(tam,(255,200,80,alpha))
             surf.blit(s,(tx-tam,ty-tam))
-        # Glow
-        g=pg.Surface((20,20),pg.SRCALPHA)
-        pg.draw.circle(g,(255,255,180,100),(10,10),10)
+        g=circulo_cache(10,(255,255,180,100))
         surf.blit(g,(self.x-10,self.y-10))
         pg.draw.circle(surf,BLANCO,(int(self.x),int(self.y)),5)
         pg.draw.circle(surf,AMARILLO,(int(self.x),int(self.y)),3)
-
 
 class BalaZombie:
     def __init__(self,x,y,dx,dy):
@@ -1095,11 +1595,9 @@ class BalaZombie:
         self.vida-=1
         return self.vida>0 and INTERIOR_X0<self.x<INTERIOR_X1 and INTERIOR_Y0<self.y<INTERIOR_Y1
     def dibujar(self,surf):
-        g=pg.Surface((16,16),pg.SRCALPHA)
-        pg.draw.circle(g,(100,255,100,150),(8,8),8)
+        g=circulo_cache(8,(100,255,100,150))
         surf.blit(g,(self.x-8,self.y-8))
         pg.draw.circle(surf,(100,255,100),(int(self.x),int(self.y)),4)
-
 
 class Moneda:
     def __init__(self,x,y):
@@ -1118,13 +1616,13 @@ class Moneda:
         pg.draw.circle(surf,(255,240,149),(x,y-1),12,2)
         surf.blit(SIMBOLO_MONEDA,SIMBOLO_MONEDA.get_rect(center=(x,y)))
 
-
 class Botiquin:
     def __init__(self,x,y):
         self.x,self.y=x,y; self.radio=12
         self.anim=random.uniform(0,6.28)
     def update(self): self.anim+=0.1
     def dibujar(self,surf):
+        sombra_tocada(surf,self.x,self.y+self.radio-2,30,10)
         pulso=abs(math.sin(self.anim))*2
         tam=self.radio+pulso
         s=pg.Surface((int(tam*5),int(tam*5)),pg.SRCALPHA)
@@ -1134,7 +1632,6 @@ class Botiquin:
         pg.draw.rect(surf,BLANCO,(self.x-4,self.y-10,8,20))
         pg.draw.rect(surf,BLANCO,(self.x-10,self.y-4,20,8))
 
-
 class PowerUp:
     def __init__(self,x,y,tipo):
         self.x,self.y=x,y; self.tipo=tipo
@@ -1143,6 +1640,7 @@ class PowerUp:
         self.anim+=0.15; self.vida-=1
         return self.vida>0
     def dibujar(self,surf):
+        sombra_tocada(surf,self.x,self.y+11,28,9)
         colores={"velocidad":CIAN,"escudo":(100,200,255),"daño":ROJO,"vida":VERDE}
         color=colores.get(self.tipo,BLANCO)
         pulso=abs(math.sin(self.anim))*5
@@ -1154,7 +1652,6 @@ class PowerUp:
         pg.draw.circle(surf,color,(int(self.x),int(self.y)),int(tam))
         pg.draw.circle(surf,BLANCO,(int(self.x),int(self.y)),int(tam),2)
 
-
 class Granada:
     def __init__(self,x,y,dx,dy):
         self.x,self.y=x,y; self.dx,self.dy=dx,dy
@@ -1164,7 +1661,6 @@ class Granada:
         self.dx*=0.95; self.dy*=0.95
         self.vida-=1; self.anim+=0.3
         if self.vida<=0:
-            # Explosión
             for z in zombies[:]:
                 if math.hypot(z.x-self.x,z.y-self.y)<120: z.recibir_daño(80)
             for _ in range(60):
@@ -1173,27 +1669,55 @@ class Granada:
             return False
         return True
     def dibujar(self,surf):
+        sombra_tocada(surf,self.x,self.y+8,18,7)
         pg.draw.circle(surf,VERDE_OSCURO,(int(self.x),int(self.y)),7)
         pg.draw.circle(surf,(100,200,100),(int(self.x-2),int(self.y-2)),3)
         pg.draw.line(surf,ROJO,(self.x,self.y-7),(self.x,self.y-12),2)
-
+        if self.vida<=14:
+            pulso=(14-self.vida)/14
+            radio=round(25+95*pulso)
+            pg.draw.circle(surf,(210,151,73),(round(self.x),round(self.y)),radio,1)
+            graficos.luz(surf,(self.x,self.y),35,(240,135,45))
 
 class Obstaculo:
     def __init__(self,x,y,radio,tema):
         self.x,self.y,self.radio=x,y,radio
         self.tipo=random.choice(["escombro","vehiculo","barricada"])
         self.color=tema["acento"]
+        self.textura_hospital=None
+        if nivel_actual == 2 and HOSPITAL_PROPS:
+            imagen=random.choice(HOSPITAL_PROPS)
+            escala=min(92/imagen.get_width(),92/imagen.get_height())
+            tam=(max(1,round(imagen.get_width()*escala)),max(1,round(imagen.get_height()*escala)))
+            self.textura_hospital=pg.transform.smoothscale(imagen,tam)
+        self.escombros=[]
+        if self.tipo=="escombro":
+            for i in range(6):
+                rng=random.Random(self.x+i*100)
+                self.escombros.append((int(self.x+rng.uniform(-self.radio,self.radio)),
+                                       int(self.y+rng.uniform(-self.radio,self.radio)),
+                                       int(rng.uniform(5,13))))
     def dibujar(self,surf):
-        som=pg.Surface((self.radio*2+10,self.radio),pg.SRCALPHA)
-        pg.draw.ellipse(som,(0,0,0,110),(0,0,self.radio*2+10,self.radio))
+        som=sombra_cache(self.radio*2+10,self.radio,(0,0,0,110))
         surf.blit(som,(self.x-self.radio-5,self.y+self.radio-8))
+        if self.textura_hospital:
+            rect=self.textura_hospital.get_rect(midbottom=(round(self.x),round(self.y+7)))
+            surf.blit(self.textura_hospital,rect)
+            return
         if self.tipo=="vehiculo":
             r=pg.Rect(0,0,self.radio*2,self.radio*1.3); r.center=(int(self.x),int(self.y))
+            for tx in (r.left+5,r.right-15):
+                for ty in (r.top-4,r.bottom-3):
+                    pg.draw.rect(surf,(10,14,19),(tx,ty,10,7),border_radius=2)
             pg.draw.rect(surf,self.color,r,border_radius=8)
             pg.draw.rect(surf,tuple(max(0,c-40) for c in self.color),r,3,border_radius=8)
             pg.draw.rect(surf,(60,70,90),(r.x+6,r.y+6,r.width-12,12),border_radius=3)
             pg.draw.rect(surf,(40,50,70),(r.x+6,r.y+r.height-18,r.width-12,12),border_radius=3)
+            pg.draw.line(surf,(150,171,180),(r.left+8,r.top+7),(r.right-9,r.top+7),2)
+            pg.draw.line(surf,(175,176,144),(r.left+6,r.bottom-4),(r.left+12,r.bottom-4),2)
+            pg.draw.line(surf,(175,176,144),(r.right-12,r.bottom-4),(r.right-6,r.bottom-4),2)
         elif self.tipo=="barricada":
+            pg.draw.rect(surf,(29,26,23),(self.x-self.radio-3,self.y-self.radio//2-3,self.radio*2+6,self.radio+6),border_radius=4)
             pg.draw.rect(surf,self.color,(self.x-self.radio,self.y-self.radio//2,self.radio*2,self.radio),border_radius=4)
             for i in range(4):
                 pg.draw.line(surf,NARANJA,(self.x-self.radio+i*10,self.y-self.radio//2),(self.x-self.radio+i*10,self.y+self.radio//2),3)
@@ -1204,7 +1728,6 @@ class Obstaculo:
                 tam=r.uniform(5,13)
                 pg.draw.circle(surf,self.color,(int(self.x+ox),int(self.y+oy)),int(tam))
                 pg.draw.circle(surf,tuple(max(0,c-30) for c in self.color),(int(self.x+ox),int(self.y+oy)),int(tam),2)
-
 
 class Particula:
     def __init__(self,x,y,color,vel=4,vida=30):
@@ -1224,22 +1747,83 @@ class Particula:
         pg.draw.circle(s,(*self.color,alpha),(tam,tam),tam)
         surf.blit(s,(self.x-tam,self.y-tam))
 
-
 class SangrePiso:
     def __init__(self,x,y):
         self.x,self.y=x,y; self.vida=600
-        self.manchas=[(random.uniform(-20,20),random.uniform(-20,20),random.uniform(8,20)) for _ in range(5)]
+        self._mancha=self._chafarrinazo()
+    def _chafarrinazo(self):
+        rng=random.Random(random.randrange(2**31))
+        r0=int(rng.uniform(13,24))
+        s=pg.Surface((r0*5,r0*5),pg.SRCALPHA)
+        cx=cy=r0*2.5
+        for _ in range(9):
+            ox,oy=rng.uniform(-.45,.45)*r0,rng.uniform(-.4,.4)*r0
+            pg.draw.circle(s,(96,10,18,240),(round(cx+ox*r0*.5),round(cy+oy*r0*.5)),
+                           int(r0*rng.uniform(.55,1.0)))
+        pg.draw.circle(s,(150,34,28,200),(round(cx-r0*.15),round(cy-r0*.2)),int(r0*.45))
+        pg.draw.circle(s,(54,4,10,220),(round(cx+r0*.2),round(cy+r0*.25)),int(r0*.5))
+        for _ in range(14):
+            ang=rng.uniform(0,6.28)
+            d=r0*rng.uniform(.9,1.8)
+            rr=int(rng.uniform(1.5,5.5))
+            gx,gy=cx+math.cos(ang)*d,cy+math.sin(ang)*d*rng.uniform(.4,.8)
+            pg.draw.ellipse(s,(88,9,17,235),(round(gx-rr),round(gy-rr*rng.uniform(.5,1)),
+                                             rr*2,int(rr*rng.uniform(1.2,2.6))))
+        for _ in range(4):
+            ang=rng.uniform(0,6.28); largo=r0*rng.uniform(.7,1.4)
+            pg.draw.line(s,(96,10,18,210),
+                         (round(cx+math.cos(ang)*r0*.5),round(cy+math.sin(ang)*r0*.35)),
+                         (round(cx+math.cos(ang)*(r0*.5+largo)),round(cy+math.sin(ang)*(r0*.35+largo*.5))),3)
+        s.set_alpha(255)
+        return s
     def update(self):
         self.vida-=1; return self.vida>0
     def dibujar(self,surf):
-        alpha=int(150*(self.vida/600))
-        for mx,my,r in self.manchas:
-            s=pg.Surface((int(r*2),int(r*2)),pg.SRCALPHA)
-            pg.draw.circle(s,(80,10,20,alpha),(int(r),int(r)),int(r))
-            surf.blit(s,(self.x+mx-r,self.y+my-r))
+        surf.blit(self._mancha,(round(self.x-self._mancha.get_width()/2),
+                                round(self.y-self._mancha.get_height()/2)))
 
+class SangreMuro:
+    def __init__(self,x,y,lado):
+        self.x,self.y=x,y; self.lado=lado
+        rng=random.Random(random.randrange(2**31))
+        s=pg.Surface((110,96),pg.SRCALPHA)
+        cx=cy=55
+        for _ in range(8):
+            ox,oy=rng.uniform(-22,22),rng.uniform(-14,14)
+            pg.draw.circle(s,(88,9,16,245),(round(cx+ox),round(cy+oy)),int(rng.uniform(5,12)))
+        pg.draw.circle(s,(140,26,22,190),(round(cx-4),round(cy-4)),9)
+        for _ in range(12):
+            gx,gy=cx+rng.uniform(-40,40),cy+rng.uniform(-26,26)
+            rr=int(rng.uniform(1,4))
+            pg.draw.ellipse(s,(88,9,16,225),(round(gx-rr),round(gy-rr),rr*2,rr*2+3))
+        for _ in range(rng.randrange(3,6)):
+            hx=round(cx+rng.uniform(-20,20))
+            largo=int(rng.uniform(14,34))
+            pg.draw.line(s,(88,9,16,235),(hx,cy-6),(hx,cy-6+largo),3)
+            pg.draw.circle(s,(88,9,16,235),(hx,cy-6+largo),3)
+        self.mancha=s
+    def dibujar(self,surf):
+        if self.lado=="N": clip=(0,0,ANCHO,116)
+        elif self.lado=="S": clip=(0,ALTO-42,ANCHO,42)
+        elif self.lado=="O": clip=(0,0,46,ALTO)
+        else: clip=(ANCHO-46,0,46,ALTO)
+        anterior=surf.get_clip()
+        surf.set_clip(clip)
+        surf.blit(self.mancha,(round(self.x-55),round(self.y-55)))
+        surf.set_clip(anterior)
 
-# ============ HELPERS ============
+def manchar_pared(x,y,prob=0.85):
+    if random.random()>prob: return
+    global sangre_muro
+    candidatas=[("N",(x,random.randint(92,112)),abs(y-INTERIOR_Y0)),
+                ("S",(x,random.randint(ALTO-32,ALTO-12)),abs(y-INTERIOR_Y1)),
+                ("O",(random.randint(18,36),y),abs(x-INTERIOR_X0)),
+                ("E",(random.randint(ANCHO-36,ANCHO-18),y),abs(x-INTERIOR_X1))]
+    lado,punto,dist=min(candidatas,key=lambda c:c[2])
+    if dist>=95: return
+    sangre_muro.append(SangreMuro(*punto,lado))
+    if len(sangre_muro)>60: sangre_muro.pop(0)
+
 def libre(x,y,radio,es_jugador=False):
     if not (INTERIOR_X0<=x<=INTERIOR_X1 and INTERIOR_Y0<=y<=INTERIOR_Y1):
         if not (es_jugador and vano_transitable(x,y)): return False
@@ -1266,21 +1850,19 @@ def pos_libre(radio,usados=(),dist_jug=0):
                 return x,y
     return None
 
-# ============ SALAS (mapa tipo Isaac) ============
 class Sala:
     def __init__(self,cx,cy,tipo="normal"):
         self.cx,self.cy=cx,cy
-        self.tipo=tipo  # inicio | normal | tesoro | jefe
+        self.tipo=tipo
         self.visitada=False
         self.limpia=tipo in ("inicio","tesoro")
         self.habia_enemigos=False
         self.generada=False
         self.trampilla=None
         self.zombies=[]; self.monedas=[]; self.botiquines=[]
-        self.obstaculos=[]; self.sangre=[]; self.extras=[]
+        self.obstaculos=[]; self.sangre=[]; self.sangre_muro=[]; self.extras=[]
 
 def generar_mapa(idx):
-    """Laberinto estilo Isaac: sin bloques 2x2; el jefe queda al fondo."""
     salas={(0,0):Sala(0,0,"inicio")}
     objetivo=NIVELES[idx]["salas"]
     intentos=0
@@ -1323,7 +1905,6 @@ def puertas_abiertas():
     return not any(z.esta_vivo() for z in zombies)
 
 def vano_transitable(x,y):
-    """Permite al jugador meterse en el vano de una puerta abierta."""
     if sala_actual is None or not puertas_abiertas(): return False
     activas={d for d in DIRS_SALA if vecino_en(d) in mapa_salas}
     if "N" in activas and abs(x-MID_X)<=34 and INTERIOR_Y0-26<=y<=INTERIOR_Y0: return True
@@ -1354,12 +1935,14 @@ def guardar_sala_actual():
     sala_actual.botiquines=botiquines
     sala_actual.obstaculos=obstaculos
     sala_actual.sangre=sangre_piso
+    sala_actual.sangre_muro=sangre_muro
     sala_actual.extras=[p for p in particulas if isinstance(p,PowerUp)]
 
 def cargar_sala(sala):
-    global zombies,monedas,botiquines,obstaculos,sangre_piso,particulas,balas,jefe_actual
+    global zombies,monedas,botiquines,obstaculos,sangre_piso,sangre_muro,particulas,balas,jefe_actual
     zombies,monedas,botiquines=sala.zombies,sala.monedas,sala.botiquines
     obstaculos,sangre_piso=sala.obstaculos,sala.sangre
+    sangre_muro=sala.sangre_muro
     balas=[]
     particulas=list(sala.extras)
     jefe_actual=next((z for z in zombies if z.es_jefe and z.esta_vivo()),None)
@@ -1389,9 +1972,10 @@ def cambiar_sala():
         mostrar_mensaje("Sala del tesoro")
 
 def poblar_sala(sala,idx):
-    global zombies,monedas,botiquines,obstaculos,sangre_piso,jefe_actual
+    global zombies,monedas,botiquines,obstaculos,sangre_piso,sangre_muro,jefe_actual
     zombies,monedas,botiquines=sala.zombies,sala.monedas,sala.botiquines
     obstaculos,sangre_piso=sala.obstaculos,sala.sangre
+    sangre_muro=sala.sangre_muro
     if sala.generada:
         jefe_actual=next((z for z in zombies if z.es_jefe and z.esta_vivo()),None)
         return
@@ -1423,23 +2007,25 @@ def poblar_sala(sala,idx):
             sala.extras.append(extra)
         return
     if sala.tipo=="jefe":
-        # Zona del jefe: pocos escombros, el jefe espera dentro.
         for _ in range(2):
             p=pos_libre(30,obstaculos,240)
             if p and lejos_puertas(p): obstaculos.append(Obstaculo(*p,random.randint(18,28),tema))
         p=pos_libre(50,zombies,260)
         if p:
-            jefe=Jefe(*p)
+            jefe=Jefe(*p,idx)
             factor=1.35 if nivel.get("jefe") else 1.0
             jefe.vida=jefe.vida_max=int(420*(1+0.18*idx)*factor)
             zombies.append(jefe)
             jefe_actual=jefe
+            mostrar_mensaje(f"¡CUIDADO! APARECE EL {jefe.nombre}")
         for _ in range(2):
             p=pos_libre(25,zombies,240)
             if p: zombies.append(Zombie(*p,"normal"))
+        if idx>=3:
+            p=pos_libre(20,zombies,230)
+            if p: zombies.append(PerroZombie(*p,idx))
         sala.habia_enemigos=True
         return
-    # Sala normal: obstaculos lejos de las puertas.
     for _ in range(random.randint(2,max(3,nivel["obstaculos"]//3))):
         p=pos_libre(30,obstaculos,180)
         if p and lejos_puertas(p): obstaculos.append(Obstaculo(*p,random.randint(18,32),tema))
@@ -1452,6 +2038,11 @@ def poblar_sala(sala,idx):
         if idx>=3: tipos+=["tanque","explosivo"]
         p=pos_libre(25,zombies,200)
         if p: zombies.append(Zombie(*p,random.choice(tipos)))
+    if idx>=3:
+        cantidad_perros=1+(1 if idx>=5 and random.random()<0.5 else 0)
+        for _ in range(cantidad_perros):
+            p=pos_libre(20,zombies,190)
+            if p: zombies.append(PerroZombie(*p,idx))
     sala.habia_enemigos=bool(zombies)
     for _ in range(random.randint(2,4)):
         p=pos_libre(25,monedas,60)
@@ -1462,8 +2053,8 @@ def poblar_sala(sala,idx):
 
 def iniciar_nivel(idx):
     global nivel_actual,jugadores,zombies,balas,monedas,botiquines
-    global particulas,obstaculos,mapa_salas,sala_actual,transicion
-    global monedas_obtenidas,tiempo_restante,tiempo_extraccion,sangre_piso,jefe_actual,jefe_alertado
+    global particulas,obstaculos,mapa_salas,sala_actual,transicion,companeros_mapa
+    global monedas_obtenidas,tiempo_restante,tiempo_extraccion,sangre_piso,sangre_muro,jefe_actual,jefe_alertado
     global daño_nivel, mensaje_flotante
     daño_nivel=False
     mensaje_flotante=""
@@ -1480,8 +2071,9 @@ def iniciar_nivel(idx):
     mapa_salas=generar_mapa(idx)
     sala_actual=mapa_salas[(0,0)]
     sala_actual.visitada=True
+    crear_companeros_mapa(idx)
     zombies=[]; monedas=[]; botiquines=[]
-    obstaculos=[]; sangre_piso=[]
+    obstaculos=[]; sangre_piso=[]; sangre_muro=[]
     balas=[]; particulas=[]
     poblar_sala(sala_actual,idx)
     jefe_actual=None; jefe_alertado=False; transicion=None
@@ -1510,51 +2102,60 @@ def guardar_highscore(nombre,puntos,nivel):
     highscores=highscores[:10]
     guardar_json(F_SCORES,highscores)
 
-
-# ============ MINIMAPA (estilo Isaac) ============
 def caja_minimapa():
     if not mapa_salas: return None
-    c,m=15,3
+    c,m,p=28,8,12
     xs=[s.cx for s in mapa_salas.values()]; ys=[s.cy for s in mapa_salas.values()]
-    w=(max(xs)-min(xs)+1)*(c+m)-m+8
-    h=(max(ys)-min(ys)+1)*(c+m)-m+8
-    return (ANCHO-14-w,8,w,h)
+    w=(max(xs)-min(xs)+1)*(c+m)-m+p*2
+    h=(max(ys)-min(ys)+1)*(c+m)-m+p*2
+    return (16,ALTO-62-h,w,h)
 
 def dibujar_minimapa():
     caja=caja_minimapa()
     if caja is None: return
     ox,oy,w,h=caja
     panel=pg.Surface((w,h),pg.SRCALPHA)
-    panel.fill((8,12,20,165))
-    pantalla.blit(panel,(ox,oy))
-    pg.draw.rect(pantalla,GRIS,(ox,oy,w,h),1,border_radius=4)
-    c,m=15,3
+    panel.fill((8,12,20,105))
+    pg.draw.rect(panel,(170,190,205,125),(0,0,w,h),1,border_radius=8)
+    c,m,p=28,8,12
     xs=[s.cx for s in mapa_salas.values()]; ys=[s.cy for s in mapa_salas.values()]
     minx,miny=min(xs),min(ys)
     conocidas={(s.cx+dx,s.cy+dy) for s in mapa_salas.values() if s.visitada
                for dx,dy in DIRS_SALA.values()}
+    visibles={(s.cx,s.cy) for s in mapa_salas.values()
+              if s.visitada or (s.cx,s.cy) in conocidas}
+    for sala in mapa_salas.values():
+        origen=(sala.cx,sala.cy)
+        if origen not in visibles: continue
+        x1=p+(sala.cx-minx)*(c+m)+c//2
+        y1=p+(sala.cy-miny)*(c+m)+c//2
+        for d,(dx,dy) in DIRS_SALA.items():
+            destino=(sala.cx+dx,sala.cy+dy)
+            if destino not in visibles or destino not in mapa_salas: continue
+            x2=p+(destino[0]-minx)*(c+m)+c//2
+            y2=p+(destino[1]-miny)*(c+m)+c//2
+            pg.draw.line(panel,(125,155,175,105),(x1,y1),(x2,y2),5)
     for sala in mapa_salas.values():
         if not (sala.visitada or (sala.cx,sala.cy) in conocidas): continue
-        rx=ox+4+(sala.cx-minx)*(c+m); ry=oy+4+(sala.cy-miny)*(c+m)
+        rx=p+(sala.cx-minx)*(c+m); ry=p+(sala.cy-miny)*(c+m)
         actual=sala is sala_actual
         if actual: color=BLANCO
         elif sala.tipo=="jefe": color=ROJO
         elif sala.tipo=="tesoro": color=DORADO
         elif sala.visitada: color=(110,120,135)
         else: color=GRIS_OSCURO
-        pg.draw.rect(pantalla,color,(rx,ry,c,c),border_radius=3)
+        pg.draw.rect(panel,(*color,205),(rx,ry,c,c),border_radius=5)
         if actual:
-            pg.draw.rect(pantalla,DORADO,(rx-2,ry-2,c+4,c+4),2,border_radius=4)
+            pg.draw.rect(panel,(*DORADO,235),(rx-3,ry-3,c+6,c+6),2,border_radius=6)
         elif sala.tipo=="jefe" and not sala.visitada:
-            pg.draw.rect(pantalla,ROJO,(rx-2,ry-2,c+4,c+4),1,border_radius=4)
-            pg.draw.circle(pantalla,ROJO,(rx+c//2,ry+c//2-1),3)
+            pg.draw.rect(panel,(*ROJO,220),(rx-2,ry-2,c+4,c+4),1,border_radius=5)
+            pg.draw.circle(panel,(*ROJO,230),(rx+c//2,ry+c//2-1),4)
         elif sala.tipo=="tesoro" and not sala.visitada:
             t=fuente_peq.render("$",True,(255,230,120))
-            pantalla.blit(t,t.get_rect(center=(rx+c//2,ry+c//2)))
+            panel.blit(t,t.get_rect(center=(rx+c//2,ry+c//2)))
+    pantalla.blit(panel,(ox,oy))
 
-# ============ HUD MEJORADO ============
 def dibujar_hud():
-    # Panel superior con gradiente
     panel=pg.Surface((ANCHO,80),pg.SRCALPHA)
     for y in range(80):
         alpha=int(240*(1-y/80*0.3))
@@ -1562,37 +2163,59 @@ def dibujar_hud():
     pantalla.blit(panel,(0,0))
     pg.draw.line(pantalla,AMARILLO,(0,80),(ANCHO,80),3)
     nivel=NIVELES[nivel_actual]
-    # Nombre nivel
     t=fuente_med.render(nivel["nombre"],True,BLANCO)
     pantalla.blit(t,(20,15))
     t=fuente_peq.render(f"PUNTOS: {puntuacion_total}",True,AMARILLO)
     pantalla.blit(t,(20,52))
-    # Progreso del piso y monedas
     limpias=sum(1 for s in mapa_salas.values() if s.limpia)
     t=fuente.render(f"SALAS {limpias}/{len(mapa_salas)} | $ {monedas_obtenidas} | Bolsa: ${dinero}",True,DORADO)
     pantalla.blit(t,t.get_rect(center=(ANCHO//2,25)))
-    # Tiempo con color dinámico
-    ct=BLANCO if tiempo_restante>30 else AMARILLO if tiempo_restante>10 else ROJO
-    t=fuente.render(f"⏱ {int(tiempo_restante)}s",True,ct)
-    pantalla.blit(t,t.get_rect(center=(ANCHO//2,55)))
-    # Info jugadores (a la izquierda del minimapa)
-    caja=caja_minimapa()
-    mmw=(caja[2]+16) if caja else 0
-    for i,j in enumerate(jugadores):
-        y=12+i*32
-        txt=f"P{j.num} {j.nombre} HP:{int(j.vida)} 🩹{j.botiquines} 💣{j.granadas}"
-        t=fuente_peq.render(txt,True,VERDE if j.vida>50 else AMARILLO if j.vida>25 else ROJO)
-        pantalla.blit(t,t.get_rect(topright=(ANCHO-24-mmw,y)))
+    # Reloj arcade compacto, con marco industrial y cifras ámbar estilo run-and-gun.
+    alerta=tiempo_restante<=10
+    reloj=pg.Rect(ANCHO-178,8,163,62)
+    pg.draw.rect(pantalla,(5,8,10),reloj.inflate(6,6),border_radius=6)
+    pg.draw.rect(pantalla,(93,84,62),reloj,border_radius=5)
+    pg.draw.rect(pantalla,(28,31,31),reloj.inflate(-5,-5),border_radius=4)
+    pg.draw.line(pantalla,(169,143,89),(reloj.x+7,reloj.y+4),(reloj.right-7,reloj.y+4),2)
+    color_reloj=(255,82,55) if alerta else (255,183,47)
+    etiqueta=fuente_peq.render("TIME",True,(203,194,164))
+    pantalla.blit(etiqueta,(reloj.x+10,reloj.y+8))
+    digitos=fuente_gran.render(f"{max(0,int(tiempo_restante)):03d}",True,color_reloj)
+    pantalla.blit(digitos,digitos.get_rect(midright=(reloj.right-8,reloj.y+43)))
     dibujar_minimapa()
 
+@lru_cache(maxsize=8)
+def _ventanas(nombre,fondo,acento,ancho,alto):
+    surf=pg.Surface((ancho,alto),pg.SRCALPHA)
+    marco=tono_local(fondo,1.9)
+    hoja=tono_local(fondo,2.35,18)
+    cielo=tuple(min(255,int(c*1.15+28)) for c in acento)
+    for x in (150,ANCHO//2-45,ANCHO-240):
+        pg.draw.rect(surf,(10,14,20),(x-4,84,98,32),border_radius=5)
+        pg.draw.rect(surf,hoja,(x,88,90,24),border_radius=3)
+        pg.draw.rect(surf,cielo,(x+4,92,82,17),border_radius=2)
+        pg.draw.line(surf,marco,(x+45,88),(x+45,112),2)
+        pg.draw.line(surf,marco,(x,100),(x+90,100),2)
+        pg.draw.rect(surf,marco,(x-8,115,106,5),border_radius=2)
+    for x in (14,ancho-26):
+        for y in (230,430,630):
+            pg.draw.rect(surf,(10,14,20),(x-2,y-4,20,68),border_radius=3)
+            pg.draw.rect(surf,hoja,(x,y,16,60),border_radius=2)
+            pg.draw.rect(surf,cielo,(x+3,y+3,10,54),border_radius=2)
+            pg.draw.line(surf,marco,(x,y+30),(x+16,y+30),2)
+    return surf
+
+def tono_local(color,factor,extra=0):
+    return tuple(max(0,min(255,int(c*factor+extra))) for c in color)
+
 def dibujar_muros(tema):
-    muro=tuple(max(0,int(c*0.5)) for c in tema["fondo"])
-    borde=tuple(max(0,int(c*0.3)) for c in tema["fondo"])
-    pg.draw.rect(pantalla,muro,(0,80,ANCHO,INTERIOR_Y0-80))
-    pg.draw.rect(pantalla,muro,(0,INTERIOR_Y1,ANCHO,ALTO-INTERIOR_Y1))
-    pg.draw.rect(pantalla,muro,(0,80,INTERIOR_X0,ALTO-80))
-    pg.draw.rect(pantalla,muro,(INTERIOR_X1,80,ANCHO-INTERIOR_X1,ALTO-80))
-    pg.draw.rect(pantalla,borde,(INTERIOR_X0,INTERIOR_Y0,INTERIOR_X1-INTERIOR_X0,INTERIOR_Y1-INTERIOR_Y0),3)
+    tipo=sala_actual.tipo if sala_actual else 'normal'
+    pantalla.blit(graficos.paredes(tema['fondo'],tema['acento'],tipo,ANCHO,ALTO),(0,0))
+    graficos.ambiente(pantalla,tema['acento'],tipo)
+    if nivel_actual not in (0,1) and tema["clima"] not in ("lluvia","tormenta"):
+        pantalla.blit(_ventanas(tema['nombre'],tema['fondo'],tema['acento'],ANCHO,ALTO),(0,0))
+        for x in (150,ANCHO//2-45,ANCHO-240):
+            sombra_tocada(pantalla,x+45,150,86,26,(240,235,200,26))
     sala=sala_actual
     if sala and sala.tipo=="jefe":
         s=pg.Surface((ANCHO,ALTO),pg.SRCALPHA)
@@ -1606,28 +2229,92 @@ def dibujar_muros(tema):
         pg.draw.rect(s,(210,170,50,30),(INTERIOR_X0,INTERIOR_Y0,INTERIOR_X1-INTERIOR_X0,INTERIOR_Y1-INTERIOR_Y0))
         pantalla.blit(s,(0,0))
 
+anim_puerta={}
+
+def actualizar_puertas():
+    abierto=1.0 if puertas_abiertas() else 0.0
+    activas=[d for d in DIRS_SALA if vecino_en(d) in mapa_salas]
+    for d in list(anim_puerta):
+        if d not in activas: anim_puerta.pop(d,None)
+    for d in activas:
+        e=anim_puerta.get(d)
+        if e is None:
+            anim_puerta[d]={"prog":abierto,"objetivo":abierto}
+        elif e["objetivo"]!=abierto:
+            e["objetivo"]=abierto
+            play(S_PUERTA_CERRADA if abierto==0.0 else S_PUERTA_ABIERTA)
+            if abierto==1.0 and nivel_actual in (0,1):
+                x,y=PUERTA_POS[d]
+                for _ in range(7):
+                    particulas.append(Particula(x+random.randint(-14,14),y+random.randint(-8,8),
+                                                 random.choice([(158,133,97),(112,105,91),(193,172,127)]),4,22))
+    for d,e in anim_puerta.items():
+        paso=0.045 if e["objetivo"]==0.0 else 0.03
+        if e["prog"]<e["objetivo"]: e["prog"]=min(e["objetivo"],e["prog"]+paso)
+        elif e["prog"]>e["objetivo"]: e["prog"]=max(e["objetivo"],e["prog"]-paso)
+
 def dibujar_puertas():
     tema=TEMAS[nivel_actual]
     for d in DIRS_SALA:
         if vecino_en(d) not in mapa_salas: continue
         x,y,w,h=rect_puerta(d)
-        pg.draw.rect(pantalla,(10,10,14),(x,y,w,h))
-        if puertas_abiertas():
-            marco=(255,205,80)
-            luz=pg.Surface((w,h),pg.SRCALPHA)
-            pg.draw.rect(luz,(120,200,255,70),(0,0,w,h))
-            pantalla.blit(luz,(x,y))
-        else:
-            marco=GRIS
-            # Barras cerradas mientras queden zombis vivos.
+        e=anim_puerta.get(d)
+        prog=e["prog"] if e else (1.0 if puertas_abiertas() else 0.0)
+        if nivel_actual in (0,1):
+            parches=CITY_DOOR_PATCHES.get(nivel_actual)
+            if parches:
+                pantalla.blit(parches[1 if d in ("O","E") else 0],(x,y))
+            if prog<0.96:
+                barrera=CITY_BARRIER_V if d in ("O","E") else CITY_BARRIER_H
+                if barrera:
+                    factor=max(.08,1-prog)
+                    size=(max(2,round(barrera.get_width()*factor)),max(2,round(barrera.get_height()*factor)))
+                    imagen=pg.transform.smoothscale(barrera,size)
+                    pantalla.blit(imagen,imagen.get_rect(center=(x+w//2,y+h//2)))
+            acento=(238,159,52) if prog<0.96 else (83,208,139)
+            pg.draw.rect(pantalla,(13,17,19),(x-4,y-4,w+8,h+8),3)
+            pg.draw.rect(pantalla,acento,(x,y,w,h),3)
             if d in ("N","S"):
-                for bx in (x+10,x+w//2-2,x+w-12):
-                    pg.draw.rect(pantalla,(66,70,80),(bx,y,5,h))
-                pg.draw.rect(pantalla,(40,44,52),(x,y+h//2-3,w,6))
+                puntos=((x+7,y+h//2),(x+w-7,y+h//2))
             else:
-                for by in (y+10,y+h//2-2,y+h-12):
-                    pg.draw.rect(pantalla,(66,70,80),(x,by,w,5))
-                pg.draw.rect(pantalla,(40,44,52),(x+w//2-3,y,6,h))
+                puntos=((x+w//2,y+7),(x+w//2,y+h-7))
+            for px,py in puntos:
+                pg.draw.circle(pantalla,(22,27,28),(px,py),5)
+                pg.draw.circle(pantalla,acento,(px,py),3)
+            continue
+        if prog>0.02:
+            luz=pg.Surface((w,h),pg.SRCALPHA)
+            pg.draw.rect(luz,(120,200,255,int(70*prog)),(0,0,w,h))
+            pantalla.blit(luz,(x,y))
+        paneles=pg.Surface((w,h),pg.SRCALPHA)
+        vertical=d in ("N","S")
+        mit=(w if vertical else h)//2-2
+        avance=int(prog*(mit+4))
+        for desplaz in (-avance,mit+4+avance):
+            if vertical: pg.draw.rect(paneles,(66,70,80),(desplaz,0,mit,h))
+            else: pg.draw.rect(paneles,(66,70,80),(0,desplaz,w,mit))
+            if vertical:
+                for bx in (desplaz+8,desplaz+mit//2,desplaz+mit-12):
+                    pg.draw.rect(paneles,(40,44,52),(bx,2,5,h-4))
+            else:
+                for by in (desplaz+8,desplaz+mit//2,desplaz+mit-12):
+                    pg.draw.rect(paneles,(40,44,52),(2,by,w-4,5))
+        if e and 0.02<e["prog"]<0.98:
+            bor=(255,205,80,120)
+            if vertical:
+                pg.draw.line(paneles,bor,(mit-avance,0),(mit-avance,h),2)
+                pg.draw.line(paneles,bor,(mit+4+avance,0),(mit+4+avance,h),2)
+                if random.random()<0.5:
+                    borde=x+random.choice([mit-avance,mit+4+avance])
+                    particulas.append(Particula(borde,y+random.randint(4,h-4),AMARILLO,2,10))
+            else:
+                pg.draw.line(paneles,bor,(0,mit-avance),(w,mit-avance),2)
+                pg.draw.line(paneles,bor,(0,mit+4+avance),(w,mit+4+avance),2)
+                if random.random()<0.5:
+                    borde=y+random.choice([mit-avance,mit+4+avance])
+                    particulas.append(Particula(x+random.randint(4,w-4),borde,AMARILLO,2,10))
+        pantalla.blit(paneles,(x,y))
+        marco=tuple(int(GRIS[i]+((255,205,80)[i]-GRIS[i])*prog) for i in range(3))
         if d=="N": pg.draw.rect(pantalla,marco,(x-4,y-4,w+8,h+4),3)
         elif d=="S": pg.draw.rect(pantalla,marco,(x-4,y,w+8,h+8),3)
         elif d=="O": pg.draw.rect(pantalla,marco,(x-4,y-4,w+4,h+8),3)
@@ -1655,11 +2342,8 @@ def dibujar_mensaje():
     t.set_alpha(alpha)
     pantalla.blit(t,t.get_rect(center=(ANCHO//2,110)))
 
-
-# ============ PANTALLAS ============
 def dibujar_insert_coin():
     fondo_portada()
-    # Título con glow
     pulso=abs(math.sin(pg.time.get_ticks()/500))
     for offset in [(0,0,4),(0,0,2)]:
         glow=texto_ajustado(fuente_titulo,"APOCALYPSE",(200,50,70),500)
@@ -1757,8 +2441,8 @@ def dibujar_instrucciones():
     pantalla.blit(t,t.get_rect(center=(ANCHO//4,y)))
     t=fuente_med.render("JUGADOR 2",True,NARANJA)
     pantalla.blit(t,t.get_rect(center=(3*ANCHO//4,y)))
-    p1=["WASD: mover","ESPACIO: disparar","Q: curar | E: golpear","R: cambiar arma | G: granada","SHIFT izq.: correr"]
-    p2=["Flechas: mover","ENTER: disparar",".: curar | CTRL der.: golpe",",: arma | /: granada","SHIFT der.: correr"]
+    p1=["WASD: mover","ESPACIO: disparar","Q: curar | E: golpear","R: cambiar arma | G: granada","SHIFT izq.: correr", "T: hablar con un compañero"]
+    p2=["Flechas: mover","ENTER: disparar",".: curar | CTRL der.: golpe",",: arma | /: granada","SHIFT der.: correr", "L: hablar con un compañero"]
     y+=45
     for a,b in zip(p1,p2):
         t=fuente.render(a,True,BLANCO)
@@ -1810,7 +2494,7 @@ def dibujar_seleccion():
     t=fuente_gran.render(f"ELIGE PERSONAJE — JUGADOR {turno_seleccion+1}",True,BLANCO)
     pantalla.blit(t,t.get_rect(center=(ANCHO//2,80)))
     for i,p in enumerate(PERSONAJES):
-        rect=pg.Rect(25+i*295,140,270,360)
+        rect=pg.Rect(25+i*232,140,222,360)
         ocupado=coop and turno_seleccion==1 and i==seleccionados[0]
         pg.draw.rect(pantalla,(26,34,47),rect,border_radius=16)
         pg.draw.rect(pantalla,DORADO if i==cursor_personaje else GRIS,rect,4 if i==cursor_personaje else 1,border_radius=16)
@@ -1823,20 +2507,81 @@ def dibujar_seleccion():
         t=fuente.render("Skin: "+NOMBRES_SKIN[skins[i]],True,CIAN)
         pantalla.blit(t,t.get_rect(center=(rect.centerx,440)))
     for texto,y in [("A / D: personaje | X: skin | H: habilidades | ENTER: confirmar",570),
-                    ("Cuatro personajes disponibles; hasta dos jugadores simultáneos.",615),
+                    ("Cinco personajes disponibles; hasta dos jugadores simultáneos.",615),
                     ("Cada personaje tiene una habilidad especial. Las skins son cosméticas.",650)]:
         t=fuente.render(texto,True,BLANCO)
         pantalla.blit(t,t.get_rect(center=(ANCHO//2,y)))
 
 def dibujar_pausa():
-    capa=pg.Surface((ANCHO,ALTO),pg.SRCALPHA); capa.fill((0,0,0,180))
+    capa=pg.Surface((ANCHO,ALTO),pg.SRCALPHA); capa.fill((0,0,0,178))
     pantalla.blit(capa,(0,0))
-    t=fuente_titulo.render("PAUSA",True,AMARILLO)
-    pantalla.blit(t,t.get_rect(center=(ANCHO//2,ALTO//2-60)))
-    t=fuente_med.render("START / P - Continuar",True,BLANCO)
-    pantalla.blit(t,t.get_rect(center=(ANCHO//2,ALTO//2+30)))
-    t=fuente.render("M - Menú principal | H - Habilidades y skins",True,GRIS_CLARO)
-    pantalla.blit(t,t.get_rect(center=(ANCHO//2,ALTO//2+80)))
+    x,y,w,h=ANCHO//2-205,48,410,604
+    pg.draw.rect(pantalla,(4,6,8),(x+10,y+12,w,h),border_radius=18)
+    pg.draw.rect(pantalla,(35,39,40),(x,y,w,h),border_radius=18)
+    pg.draw.rect(pantalla,(112,48,37),(x+7,y+7,w-14,h-14),3,border_radius=15)
+    pg.draw.rect(pantalla,(17,21,23),(x+14,y+14,w-28,h-28),border_radius=12)
+    pg.draw.line(pantalla,(145,54,40),(x+22,y+112),(x+w-22,y+112),3)
+    for sx in (x+19,x+w-19):
+        for sy in (y+20,y+h-20):
+            pg.draw.circle(pantalla,(169,156,133),(sx,sy),4)
+            pg.draw.circle(pantalla,(42,45,45),(sx,sy),2)
+    # Caution marks and scratches give the steel panel a worn survival-game look.
+    for i in range(7):
+        px=x+24+i*54
+        pg.draw.line(pantalla,(129,91,42),(px,y+24),(px+13,y+24),3)
+    for i in range(5):
+        px=x+30+i*83
+        pg.draw.line(pantalla,(70,73,70),(px,y+121),(px+18,y+115),1)
+    placa=pg.Rect(x+78,y+39,w-156,58)
+    pg.draw.rect(pantalla,(7,9,10),placa.inflate(8,8),border_radius=7)
+    pg.draw.rect(pantalla,(46,48,45),placa,border_radius=6)
+    pg.draw.rect(pantalla,(145,54,40),placa,2,border_radius=6)
+    titulo="OPCIONES" if pausa_pantalla=="opciones" else "PAUSA"
+    t=fuente_med.render(titulo,True,(220,202,163))
+    pantalla.blit(t,t.get_rect(center=placa.center))
+
+    if pausa_pantalla=="menu":
+        opciones=("REANUDAR","OPCIONES","SALIR")
+        for i,texto in enumerate(opciones):
+            bx,by,bw,bh=x+70,y+146+i*112,270,66
+            pg.draw.rect(pantalla,(75,49,25),(bx+2,by+5,bw,bh),border_radius=15)
+            fondo=(159,226,50) if i==pausa_seleccion else (111,191,39)
+            pg.draw.rect(pantalla,(76,105,29),(bx,by,bw,bh),border_radius=15)
+            pg.draw.rect(pantalla,fondo,(bx+4,by+4,bw-8,bh-9),border_radius=12)
+            pg.draw.line(pantalla,(197,244,99),(bx+15,by+10),(bx+bw-15,by+10),3)
+            if i==pausa_seleccion:
+                pg.draw.rect(pantalla,(244,220,117),(bx-5,by-5,bw+10,bh+2),2,border_radius=17)
+            t=fuente_med.render(texto,True,(47,83,24))
+            pantalla.blit(t,t.get_rect(center=(bx+bw//2,by+bh//2-2)))
+        ayuda="W / S: ELEGIR   ·   ENTER: ACEPTAR   ·   ESC: REANUDAR"
+        t=fuente_peq.render(ayuda,True,(185,178,159))
+        pantalla.blit(t,t.get_rect(center=(ANCHO//2,y+h-42)))
+    else:
+        volumenes=(volumen_musica,volumen_efectos,volumen_voces)
+        etiquetas=("MÚSICA","EFECTOS","VOCES")
+        for i,(etiqueta,valor) in enumerate(zip(etiquetas,volumenes)):
+            ry=y+122+i*98
+            caja=pg.Rect(x+44,ry,322,82)
+            pg.draw.rect(pantalla,(31,35,35),caja,border_radius=8)
+            pg.draw.rect(pantalla,(223,166,68) if pausa_opcion==i else (83,89,86),caja,3 if pausa_opcion==i else 1,border_radius=8)
+            t=fuente.render(etiqueta,True,(218,211,190))
+            pantalla.blit(t,(caja.x+18,caja.y+13))
+            t=fuente.render(f"{round(valor*100)}%",True,(218,211,190))
+            pantalla.blit(t,t.get_rect(topright=(caja.right-16,caja.y+13)))
+            barra=pg.Rect(caja.x+18,caja.y+51,caja.width-36,16)
+            pg.draw.rect(pantalla,(9,12,13),barra,border_radius=8)
+            relleno=barra.copy(); relleno.width=round(barra.width*valor)
+            if relleno.width: pg.draw.rect(pantalla,(155,55,40),relleno,border_radius=8)
+            knob_x=barra.x+round(barra.width*valor)
+            pg.draw.circle(pantalla,(224,216,194),(knob_x,barra.centery),10)
+            pg.draw.circle(pantalla,(75,79,74),(knob_x,barra.centery),10,2)
+        bx,by,bw,bh=x+95,y+425,220,52
+        pg.draw.rect(pantalla,(31,35,35),(bx,by,bw,bh),border_radius=8)
+        pg.draw.rect(pantalla,(223,166,68) if pausa_opcion==3 else (83,89,86),(bx,by,bw,bh),2,border_radius=8)
+        t=fuente.render("VOLVER",True,(218,211,190))
+        pantalla.blit(t,t.get_rect(center=(bx+bw//2,by+bh//2)))
+        t=fuente_peq.render("A / D: VOLUMEN   ·   W / S: ELEGIR",True,(185,178,159))
+        pantalla.blit(t,t.get_rect(center=(ANCHO//2,y+h-42)))
 
 def dibujar_nivel_completo():
     capa=pg.Surface((ANCHO,ALTO),pg.SRCALPHA); capa.fill((0,0,0,180))
@@ -1881,8 +2626,6 @@ def dibujar_victoria():
     t=fuente.render("START / ENTER - Volver al menú",True,BLANCO)
     pantalla.blit(t,t.get_rect(center=(ANCHO//2,ALTO//2+200)))
 
-
-# ============ LÓGICA ============
 def impacto_seg(x0,y0,x1,y1,cx,cy,r):
     dx,dy=x1-x0,y1-y0
     fx,fy=x0-cx,y0-cy
@@ -1974,6 +2717,7 @@ def actualizar_partida(teclas):
         if not z.esta_vivo():
             for _ in range(20): particulas.append(Particula(z.x,z.y,SANGRE,5,20))
             for _ in range(3): sangre_piso.append(SangrePiso(z.x+random.randint(-20,20),z.y+random.randint(-20,20)))
+            manchar_pared(z.x,z.y,0.9)
             puntuacion_total+=50 if not z.es_jefe else 500
             zombies.remove(z)
             play(S_MUERTE if z.es_jefe else S_ZOMBIE, espera=120)
@@ -1988,7 +2732,8 @@ def actualizar_partida(teclas):
         else:
             z.update(jugadores,obstaculos)
 
-    # Sala despejada: se abren las puertas y suelta una recompensa.
+    actualizar_puertas()
+
     if (sala_actual and sala_actual.habia_enemigos and not sala_actual.limpia
             and not any(z.esta_vivo() for z in zombies)):
         sala_actual.limpia=True
@@ -2004,15 +2749,12 @@ def actualizar_partida(teclas):
 
     vivos=[j for j in jugadores if j.vida>0]
 
-    # Cada objeto se actualiza una sola vez. Las explosiones pueden agregar
-    # nuevas partículas; se conservan sin actualizarlas en este mismo paso.
     pendientes=particulas
     particulas=[]
     for p in pendientes:
         if p.update():
             particulas.append(p)
 
-    # Monedas
     for m in monedas[:]:
         m.update()
         for j in vivos:
@@ -2025,13 +2767,11 @@ def actualizar_partida(teclas):
                 logros["_monedas_total"]+=1
                 if logros["_monedas_total"]>=100:
                     desbloquear_logro("100_monedas","100 monedas recolectadas")
-                # Probabilidad de power-up
                 if random.random()<0.1:
                     tipo=random.choice(["velocidad","escudo","daño","vida"])
                     particulas.append(PowerUp(m.x,m.y,tipo))
                 break
 
-    # Botiquines
     for b in botiquines[:]:
         b.update()
         for j in vivos:
@@ -2040,7 +2780,6 @@ def actualizar_partida(teclas):
                 mostrar_mensaje(f"P{j.num} obtuvo botiquín")
                 break
 
-    # Power-ups
     for p in particulas[:]:
         if isinstance(p,PowerUp):
             for j in vivos:
@@ -2049,39 +2788,42 @@ def actualizar_partida(teclas):
                     elif p.tipo=="escudo": j.escudo=300
                     elif p.tipo=="daño": j.arma=1
                     elif p.tipo=="vida": j.vida=min(100,j.vida+30)
-                    play(S_POWERUP)
+                    play(S_POWERUPS.get(p.tipo, S_POWERUP))
                     mostrar_mensaje(f"¡Power-up: {p.tipo}!")
                     particulas.remove(p)
                     break
 
-    # Sangre piso
     sangre_piso=[s for s in sangre_piso if s.update()]
 
-    # Partículas
-    objetos=[p for p in particulas if isinstance(p,(PowerUp,Granada))]
+    objetivos=[p for p in particulas if isinstance(p,(PowerUp,Granada))]
     visuales=[p for p in particulas if isinstance(p,Particula)]
-    particulas=objetos+visuales[-600:]
+    particulas=objetivos+visuales[-600:]
 
-    # Tiempo
-    tiempo_restante=max(0,tiempo_restante-1/60)
-    if not vivos or tiempo_restante<=0:
-        terminar_partida(GAME_OVER); return
+    trp = sala_actual.trampilla if sala_actual else None
+    if not trp:
+        tiempo_restante = max(0, tiempo_restante - 1/60)
 
-    # Trampilla: aparece al vencer al jefe; písala para bajar al siguiente piso.
-    trp=sala_actual.trampilla if sala_actual else None
     if trp and vivos:
-        reunidos=all(math.hypot(j.x-trp[0],j.y-trp[1])<60 for j in vivos)
-        tiempo_extraccion=tiempo_extraccion+1/60 if reunidos else 0
-        if tiempo_extraccion>=1.2:
-            puntuacion_total+=int(tiempo_restante)*5
-            guardar_json(F_LOGROS,logros)
-            if not daño_nivel: desbloquear_logro("sin_daño","Superar un nivel sin recibir daño")
-            if puntuacion_total>=5000: desbloquear_logro("5000_puntos","Puntuación mayor a 5000")
+        reunidos = all(math.hypot(j.x-trp[0], j.y-trp[1]) < 60 for j in vivos)
+        tiempo_extraccion = tiempo_extraccion + 1/60 if reunidos else 0
+        if tiempo_extraccion >= 1.2:
+            puntuacion_total += int(tiempo_restante)*5
+            guardar_json(F_LOGROS, logros)
+            if not daño_nivel:
+                desbloquear_logro("sin_daño", "Superar un nivel sin recibir daño")
+            if puntuacion_total >= 5000:
+                desbloquear_logro("5000_puntos", "Puntuación mayor a 5000")
             if mapa_salas and all(s.visitada for s in mapa_salas.values()):
-                desbloquear_logro("explorador","Explorar todas las salas de un piso")
+                desbloquear_logro("explorador", "Explorar todas las salas de un piso")
             play(S_NIVEL)
-            estado=NIVEL_COMPLETO
+            estado = NIVEL_COMPLETO
+            return
+    else:
+        tiempo_extraccion = 0
 
+    if not vivos or (tiempo_restante <= 0 and not trp):
+        terminar_partida(GAME_OVER)
+        return
 
 def terminar_partida(res):
     global estado,score_guardado
@@ -2090,7 +2832,6 @@ def terminar_partida(res):
         guardar_json(F_LOGROS,logros)
         guardar_highscore("+".join(j.nombre for j in jugadores),puntuacion_total,nivel_actual+1)
         score_guardado=True
-
 
 score_guardado=False
 jugando=True
@@ -2118,7 +2859,7 @@ def confirmar():
         if turno_seleccion==1 and cursor_personaje==seleccionados[0]: return
         seleccionados[turno_seleccion]=cursor_personaje
         if coop and turno_seleccion==0:
-            turno_seleccion=1; cursor_personaje=(cursor_personaje+1)%4
+            turno_seleccion=1; cursor_personaje=(cursor_personaje+1)%len(PERSONAJES)
         else:
             preparar_historia(); escena_historia=0; nivel_tras_historia=0
             estado=HISTORIA
@@ -2168,8 +2909,6 @@ def procesar_evento(ev):
     elif ev.type==pg.KEYDOWN:
         k=ev.key
         if tecla_audio(k): return
-        if estado in (MENU,SELECCION) and k in (pg.K_UP,pg.K_DOWN,pg.K_LEFT,pg.K_RIGHT,pg.K_a,pg.K_d):
-            play(S_MENU,"menu")
         if k==pg.K_5: agregar_credito()
         elif k==pg.K_ESCAPE:
             if estado==JUGANDO: estado=PAUSA
@@ -2180,7 +2919,7 @@ def procesar_evento(ev):
             estado=PAUSA if estado==JUGANDO else JUGANDO
         elif k==pg.K_m and estado!=JUGANDO: estado=MENU
         elif estado==SELECCION and k in (pg.K_LEFT,pg.K_RIGHT,pg.K_a,pg.K_d):
-            cursor_personaje=(cursor_personaje+(1 if k in (pg.K_RIGHT,pg.K_d) else -1))%4
+            cursor_personaje=(cursor_personaje+(1 if k in (pg.K_RIGHT,pg.K_d) else -1))%len(PERSONAJES)
         elif estado==MENU and k in (pg.K_UP,pg.K_DOWN):
             opcion_menu=(opcion_menu+(1 if k==pg.K_DOWN else -1))%7
         elif k==pg.K_RETURN and estado!=JUGANDO: confirmar()
@@ -2208,7 +2947,6 @@ def procesar_evento(ev):
             elif b==3: accion_jugador(idx+1,"granada")
         elif b in (0,6): confirmar()
 
-
 def dibujar():
     if estado==INSERT_COIN: dibujar_insert_coin()
     elif estado==MENU: dibujar_menu()
@@ -2221,26 +2959,27 @@ def dibujar():
         tema=TEMAS[nivel_actual]
         dibujar_fondo(tema)
         dibujar_muros(tema)
-        # Sangre en piso
+        for s in sangre_muro: s.dibujar(pantalla)
         for s in sangre_piso: s.dibujar(pantalla)
         dibujar_trampilla()
         dibujar_puertas()
-        # Entidades ordenadas por Y
+        if estado in (JUGANDO, "dialogo"):
+            dibujar_companeros_espera()
         todos=monedas+botiquines+[p for p in particulas if isinstance(p,PowerUp)]
         todos+=obstaculos+zombies+jugadores
         todos+=balas+[p for p in particulas if isinstance(p,Granada)]
         todos+= [p for p in particulas if not isinstance(p,(PowerUp,Granada))]
         for obj in sorted(todos,key=lambda o:getattr(o,"y",0)):
             if hasattr(obj,"dibujar"): obj.dibujar(pantalla)
-        # Clima encima de todo
+        if estado==JUGANDO:
+            dibujar_luces()
+            for j in jugadores: graficos.reticula(pantalla,j,j.color)
         dibujar_clima()
-        # Barra de la trampilla
         if tiempo_extraccion>0 and estado==JUGANDO:
             pg.draw.rect(pantalla,GRIS_OSCURO,(450,ALTO-30,300,12),border_radius=6)
             pg.draw.rect(pantalla,VERDE,(450,ALTO-30,int(300*min(1,tiempo_extraccion/1.2)),12),border_radius=6)
             t=fuente_peq.render("Abriendo el paso...",True,BLANCO)
             pantalla.blit(t,t.get_rect(center=(ANCHO//2,ALTO-40)))
-        # Shake
         if efectos["shake"]>0:
             i=math.ceil(efectos["shake"])
             copia=pantalla.copy()
@@ -2264,16 +3003,14 @@ def dibujar():
         capa.fill((*efectos["flash_color"],min(100,int(efectos["flash"]*10))))
         pantalla.blit(capa,(0,0))
 
-
 def dibujar_control_audio():
-    if estado not in (INSERT_COIN,MENU,PAUSA,INSTRUCCIONES): return
+    if estado not in (INSERT_COIN,MENU,INSTRUCCIONES): return
     estado_audio="SIN DISPOSITIVO" if not AUDIO_OK else "SILENCIADO" if audio_silenciado else "ACTIVO"
     texto=f"AUDIO {estado_audio} | F1: silencio | F2/F3 música {round(volumen_musica*100)}% | F4/F5 efectos {round(volumen_efectos*100)}%"
     imagen=fuente_peq.render(texto,True,CIAN)
     caja=imagen.get_rect(center=(ANCHO//2,ALTO-12))
     pg.draw.rect(pantalla,NEGRO,caja.inflate(16,5),border_radius=4)
     pantalla.blit(imagen,caja)
-
 
 def main():
     global opcion_menu,cursor_personaje
@@ -2289,7 +3026,7 @@ def main():
                 if estado==SELECCION: dy=dx
                 if abs(dy)>0.5 and nav_cd<=0:
                     if estado==MENU: opcion_menu=(opcion_menu+(1 if dy>0 else -1))%7
-                    else: cursor_personaje=(cursor_personaje+(1 if dy>0 else -1))%4
+                    else: cursor_personaje=(cursor_personaje+(1 if dy>0 else -1))%len(PERSONAJES)
                     play(S_MENU,"menu")
                     nav_cd=0.22
                 elif abs(dy)<0.3: nav_cd=0
@@ -2313,8 +3050,6 @@ def main():
         guardar_json(F_LOGROS,logros)
         pg.quit()
 
-
-# ============ HABILIDADES, TIENDA Y SKINS ============
 import colorsys
 HABILIDADES=[
     ("Inspiracion", "Obed acelera al equipo y duplica su cadencia durante 6 s.", 18),
@@ -2322,11 +3057,12 @@ HABILIDADES=[
     ("Impacto", "Roberto hace 45 de dano y empuja enemigos a 145 px.", 14),
     ("Auxilio", "Daniel cura 35 HP a aliados vivos a 220 px, incluido el mismo.", 20),
 ]
+HABILIDADES.append(("Determinacion", "Valeria obtiene un escudo durante 5 s y recupera toda su energia.", 20))
 NOMBRES_SKIN=["Original", "Esmeralda", "Violeta", "Artico"]
 F_SKINS=os.path.join(BASE,'skins.json')
 _config_skins=cargar_json(F_SKINS,{})
 if not isinstance(_config_skins,dict): _config_skins={}
-skins=[_config_skins.get(str(i),0) for i in range(4)]
+skins=[_config_skins.get(str(i),0) for i in range(len(PERSONAJES))]
 skins=[v if type(v) is int and 0<=v<4 else 0 for v in skins]
 CACHE_SKINS={}
 dinero=0
@@ -2358,7 +3094,6 @@ def aplicar_skin(im,i):
     clave=(id(im),i,variante)
     if clave in CACHE_SKINS: return CACHE_SKINS[clave]
     resultado=im.copy()
-    # Cambia tonos de la ropa, preservando piel, pelo, alpha y sombreado.
     for y in range(int(im.get_height()*.38),im.get_height()):
         for x in range(im.get_width()):
             r,g,b,a=im.get_at((x,y))
@@ -2394,6 +3129,9 @@ def usar_habilidad(j):
         if not aliados:
             mostrar_mensaje('No hay aliados heridos cerca'); return False
         for a in aliados: a.vida=min(a.vida_max,a.vida+35)
+    elif i==4:
+        j.escudo=max(j.escudo,300)
+        j.energia=100.0
     j.recarga_habilidad=HABILIDADES[i][2]*60
     for _ in range(18): particulas.append(Particula(j.x,j.y,j.color,4,25))
     play(S_POWERUP)
@@ -2465,9 +3203,21 @@ _dibujar_original=dibujar
 _hud_original=dibujar_hud
 
 def confirmar():
-    global estado
+    global estado,pausa_pantalla,pausa_seleccion,pausa_opcion,jugando
     if estado=='habilidades': estado=regreso_habilidades
     elif estado=='tienda': comprar()
+    elif estado==PAUSA:
+        play(S_CONFIRMAR,"menu")
+        if pausa_pantalla=="opciones":
+            if pausa_opcion==3:
+                pausa_pantalla="menu"; pausa_seleccion=1
+            return
+        if pausa_seleccion==0:
+            estado=JUGANDO; pausa_pantalla="menu"; pausa_seleccion=0
+        elif pausa_seleccion==1:
+            pausa_pantalla="opciones"; pausa_opcion=0
+        else:
+            jugando=False
     else: _confirmar_original()
 
 def siguiente_desde_tienda():
@@ -2476,10 +3226,31 @@ def siguiente_desde_tienda():
 
 def procesar_evento(ev):
     global estado,cursor_habilidad,cursor_tienda,comprador
+    global pausa_pantalla,pausa_seleccion,pausa_opcion,volumen_musica,volumen_efectos,volumen_voces
     if ev.type==pg.KEYDOWN:
         k=ev.key
+        if estado==PAUSA:
+            if k in (pg.K_ESCAPE,pg.K_p):
+                if pausa_pantalla=="opciones": pausa_pantalla="menu"; pausa_seleccion=1
+                else: estado=JUGANDO; pausa_seleccion=0
+                return
+            if pausa_pantalla=="menu" and k in (pg.K_w,pg.K_s):
+                pausa_seleccion=(pausa_seleccion+(1 if k==pg.K_s else -1))%3
+                return
+            if k in (pg.K_RETURN,pg.K_KP_ENTER,pg.K_SPACE):
+                confirmar(); return
+            if pausa_pantalla=="opciones":
+                if k in (pg.K_w,pg.K_s):
+                    pausa_opcion=(pausa_opcion+(1 if k==pg.K_s else -1))%4
+                    return
+                if k in (pg.K_a,pg.K_d) and pausa_opcion<3:
+                    delta=-.05 if k==pg.K_a else .05
+                    if pausa_opcion==0: volumen_musica=max(0,min(1,round(volumen_musica+delta,2)))
+                    elif pausa_opcion==1: volumen_efectos=max(0,min(1,round(volumen_efectos+delta,2)))
+                    else: volumen_voces=max(0,min(1,round(volumen_voces+delta,2)))
+                    aplicar_volumen(); guardar_audio(); return
         if estado=='habilidades':
-            if k in (pg.K_a,pg.K_LEFT,pg.K_d,pg.K_RIGHT): cursor_habilidad=(cursor_habilidad+(1 if k in (pg.K_d,pg.K_RIGHT) else -1))%4
+            if k in (pg.K_a,pg.K_LEFT,pg.K_d,pg.K_RIGHT): cursor_habilidad=(cursor_habilidad+(1 if k in (pg.K_d,pg.K_RIGHT) else -1))%len(PERSONAJES)
             elif k==pg.K_x: cambiar_skin(cursor_habilidad)
             elif k in (pg.K_RETURN,pg.K_ESCAPE): estado=regreso_habilidades
             else: tecla_audio(k)
@@ -2504,7 +3275,7 @@ def procesar_evento(ev):
         if idx<0: return
         b=ev.button
         if estado=='habilidades':
-            if b in (4,5): cursor_habilidad=(cursor_habilidad+(1 if b==5 else -1))%4
+            if b in (4,5): cursor_habilidad=(cursor_habilidad+(1 if b==5 else -1))%len(PERSONAJES)
             elif b==2: cambiar_skin(cursor_habilidad)
             elif b in (0,7): estado=regreso_habilidades
             return
@@ -2523,18 +3294,207 @@ def procesar_evento(ev):
 
 def dibujar_hud():
     _hud_original()
+    # Tarjetas compactas y legibles: salud, botiquines y granadas por jugador.
     for i,j in enumerate(jugadores):
+        x,y,w,h=18,91+i*79,286,68
+        tarjeta=pg.Surface((w,h),pg.SRCALPHA)
+        pg.draw.rect(tarjeta,(10,15,19,214),(0,0,w,h),border_radius=9)
+        pg.draw.rect(tarjeta,(*j.color,220),(0,0,4,h),border_radius=2)
+        pg.draw.rect(tarjeta,(116,128,129,190),(5,0,w-5,h),1,border_radius=9)
+        pantalla.blit(tarjeta,(x,y))
+        nombre=fuente_peq.render(f"P{j.num}  {j.nombre.upper()}",True,(225,226,214))
+        pantalla.blit(nombre,(x+13,y+8))
+        salud=max(0,min(1,j.vida/max(1,j.vida_max)))
+        color_vida=(88,196,111) if salud>.55 else (226,168,58) if salud>.25 else (210,68,55)
+        barra=pg.Rect(x+13,y+31,157,13)
+        pg.draw.rect(pantalla,(35,42,43),barra,border_radius=6)
+        if salud:
+            pg.draw.rect(pantalla,color_vida,(barra.x,barra.y,round(barra.width*salud),barra.height),border_radius=6)
+        pg.draw.rect(pantalla,(178,184,174),barra,1,border_radius=6)
+        vida=fuente_peq.render(f"{int(j.vida)}/{int(j.vida_max)}",True,(235,234,220))
+        pantalla.blit(vida,(x+178,y+29))
+        # Medkit cross and grenade silhouette identify supplies at a glance.
+        ix,iy=x+17,y+55
+        pg.draw.rect(pantalla,(195,206,194),(ix,iy-7,17,14),border_radius=3)
+        pg.draw.rect(pantalla,(166,53,43),(ix+7,iy-5,4,10))
+        pg.draw.rect(pantalla,(163,49,41),(ix+4,iy-2,10,4))
+        pantalla.blit(fuente_peq.render(f"{j.botiquines}",True,(230,228,213)),(ix+23,iy-8))
+        gx=x+90
+        pg.draw.ellipse(pantalla,(134,144,119),(gx,iy-6,12,13))
+        pg.draw.rect(pantalla,(171,177,151),(gx+3,iy-10,6,4),border_radius=1)
+        pg.draw.line(pantalla,(171,177,151),(gx+9,iy-9),(gx+14,iy-12),2)
+        pantalla.blit(fuente_peq.render(f"{j.granadas}",True,(230,228,213)),(gx+19,iy-8))
         tecla='F' if i==0 else '0'
         tiempo=math.ceil(j.recarga_habilidad/60)
         texto='P'+str(j.num)+' ['+tecla+'] '+HABILIDADES[j.sprite_indice][0]+(': '+str(tiempo)+'s' if tiempo else ': LISTA')
-        im=fuente_peq.render(texto,True,AMARILLO if tiempo else VERDE)
-        pg.draw.rect(pantalla,(12,19,30),(18+i*600,ALTO-47,570,24),border_radius=5)
-        pantalla.blit(im,(25+i*600,ALTO-43))
+        color=(230,184,97) if tiempo else (113,224,183)
+        im=fuente_peq.render(texto,True,color)
+        x=18+i*600
+        pg.draw.rect(pantalla,(13,22,31),(x,ALTO-47,570,27),border_radius=7)
+        pg.draw.rect(pantalla,(49,64,73),(x,ALTO-47,570,27),1,border_radius=7)
+        pg.draw.line(pantalla,j.color,(x+2,ALTO-42),(x+2,ALTO-27),3)
+        pantalla.blit(im,(x+10,ALTO-42))
+        progreso=max(0,min(1,1-j.recarga_habilidad/(HABILIDADES[j.sprite_indice][2]*60)))
+        pg.draw.rect(pantalla,(38,49,60),(x+435,ALTO-36,119,5),border_radius=2)
+        if progreso:
+            pg.draw.rect(pantalla,color,(x+435,ALTO-36,round(119*progreso),5),border_radius=2)
 
 def dibujar():
     if estado=='habilidades': dibujar_habilidades()
     elif estado=='tienda': dibujar_tienda()
     else: _dibujar_original()
+
+RADIO_CONVERSACION = 125
+dialogo = None
+
+def companero_cercano(num):
+    if sala_actual is None or transicion is not None:
+        return None
+    jugador = next((j for j in jugadores if j.num == num and j.vida > 0), None)
+    if jugador is None:
+        return None
+    clave = (sala_actual.cx, sala_actual.cy)
+    candidatos = [c for c in companeros_mapa
+                  if c['sala'] == clave and
+                  math.hypot(c['x']-jugador.x, c['y']-jugador.y) <= RADIO_CONVERSACION]
+    if not candidatos:
+        return None
+    return min(candidatos, key=lambda c: math.hypot(c['x']-jugador.x, c['y']-jugador.y))
+
+def abrir_conversacion(num):
+    global estado, dialogo
+    if estado != JUGANDO:
+        return False
+    c = companero_cercano(num)
+    if c is None:
+        mostrar_mensaje('Acércate a un compañero sentado para hablar.')
+        return False
+    dialogo = {'companero': c, 'jugador': num, 'opcion': 0,
+               'texto': conversaciones.SALUDOS[c['indice']], 'pregunta': ''}
+    estado = 'dialogo'
+    return True
+
+def cerrar_conversacion():
+    global estado, dialogo
+    dialogo = None
+    estado = JUGANDO
+
+def elegir_dialogo():
+    if dialogo['opcion'] == 3:
+        cerrar_conversacion()
+        return
+    j = next(j for j in jugadores if j.num == dialogo['jugador'])
+    opcion = dialogo['opcion']
+    dialogo['pregunta'] = j.nombre + ': ' + conversaciones.OPCIONES[opcion]
+    dialogo['texto'] = conversaciones.respuesta(
+        dialogo['companero']['indice'], opcion, j.nombre,
+        NIVELES[nivel_actual]['nombre'], j.vida < j.vida_max / 2)
+
+def lineas_dialogo(texto, ancho):
+    lineas, linea = [], ''
+    for palabra in texto.split():
+        nueva = (linea + ' ' + palabra).strip()
+        if linea and fuente.size(nueva)[0] > ancho:
+            lineas.append(linea)
+            linea = palabra
+        else:
+            linea = nueva
+    if linea:
+        lineas.append(linea)
+    return lineas
+
+def dibujar_dialogo():
+    capa = pg.Surface((ANCHO, ALTO), pg.SRCALPHA)
+    capa.fill((0, 0, 0, 175))
+    pantalla.blit(capa, (0, 0))
+    pg.draw.rect(pantalla, (17, 26, 36), (110, 135, 980, 515), border_radius=16)
+    indice = dialogo['companero']['indice']
+    color = PERSONAJES[indice]['color']
+    pg.draw.rect(pantalla, color, (110, 135, 980, 515), 2, border_radius=16)
+    pantalla.blit(AVATARES[indice], AVATARES[indice].get_rect(center=(235, 263)))
+    pantalla.blit(fuente_med.render(PERSONAJES[indice]['nombre'], True, color), (360, 160))
+    pantalla.blit(fuente_peq.render('CONVERSACIÓN · PARTIDA EN PAUSA', True, GRIS_CLARO), (360, 196))
+    if dialogo['pregunta']:
+        pantalla.blit(fuente.render(dialogo['pregunta'], True, CIAN), (360, 224))
+    for i, linea in enumerate(lineas_dialogo(dialogo['texto'], 685)):
+        pantalla.blit(fuente.render(linea, True, BLANCO), (360, 258 + i*25))
+    for i, opcion in enumerate(conversaciones.OPCIONES):
+        rect = pg.Rect(150, 391 + i*44, 900, 38)
+        activa = dialogo['opcion'] == i
+        pg.draw.rect(pantalla, (39, 61, 75) if activa else (24, 36, 47), rect, border_radius=7)
+        pantalla.blit(fuente.render(str(i+1) + '. ' + opcion, True, color if activa else BLANCO), (169, rect.y+9))
+    texto_centro('Arriba/abajo o W/S: elegir | ENTER: hablar | ESC: cerrar', 590, BLANCO, fuente)
+    texto_centro('Mando: cruceta o LB/RB para elegir · A: hablar · B: cerrar', 619, GRIS_CLARO, fuente_peq)
+
+_evento_sin_dialogo = procesar_evento
+_dibujar_sin_dialogo = dibujar
+
+def procesar_evento(ev):
+    if estado == 'dialogo':
+        if ev.type == pg.KEYDOWN:
+            if tecla_audio(ev.key):
+                return
+            if ev.key in (pg.K_ESCAPE, pg.K_t, pg.K_l):
+                cerrar_conversacion()
+            elif ev.key in (pg.K_UP, pg.K_w, pg.K_DOWN, pg.K_s):
+                dialogo['opcion'] = (dialogo['opcion'] + (1 if ev.key in (pg.K_DOWN, pg.K_s) else -1)) % 4
+            elif ev.key in (pg.K_RETURN, pg.K_KP_ENTER):
+                elegir_dialogo()
+            elif ev.key in (pg.K_1, pg.K_2, pg.K_3, pg.K_4):
+                dialogo['opcion'] = ev.key - pg.K_1
+                elegir_dialogo()
+            return
+        if ev.type in (pg.JOYBUTTONDOWN, pg.JOYHATMOTION):
+            idx = next((i for i, j in enumerate(joysticks) if j.get_instance_id() == ev.instance_id), -1)
+            if idx + 1 != dialogo['jugador']:
+                return
+            if ev.type == pg.JOYHATMOTION and ev.value[1]:
+                dialogo['opcion'] = (dialogo['opcion'] - ev.value[1]) % 4
+            elif ev.type == pg.JOYBUTTONDOWN:
+                if ev.button in (1, 10):
+                    cerrar_conversacion()
+                elif ev.button in (4, 5):
+                    dialogo['opcion'] = (dialogo['opcion'] + (1 if ev.button == 5 else -1)) % 4
+                elif ev.button == 0:
+                    elegir_dialogo()
+            return
+        _evento_sin_dialogo(ev)
+        return
+    if estado == JUGANDO:
+        if ev.type == pg.KEYDOWN and ev.key in (pg.K_t, pg.K_l):
+            abrir_conversacion(1 if ev.key == pg.K_t else 2)
+            return
+        if ev.type == pg.JOYBUTTONDOWN and ev.button == 10:
+            idx = next((i for i, j in enumerate(joysticks) if j.get_instance_id() == ev.instance_id), -1)
+            if idx >= 0:
+                abrir_conversacion(idx + 1)
+            return
+    _evento_sin_dialogo(ev)
+
+def dibujar():
+    _dibujar_sin_dialogo()
+    if estado == 'dialogo' and dialogo:
+        dibujar_dialogo()
+    elif estado == JUGANDO:
+        for j in jugadores:
+            c = companero_cercano(j.num)
+            if c is None:
+                continue
+            tecla = 'T' if j.num == 1 else 'L'
+            mensaje = 'P' + str(j.num) + ' [' + tecla + ' / R3] Hablar con ' + PERSONAJES[c['indice']]['nombre']
+            im = fuente_peq.render(mensaje, True, BLANCO)
+            rect = im.get_rect(center=(max(im.get_width()//2+8, min(ANCHO-im.get_width()//2-8, c['x'])), max(125, c['y']-100-j.num*23)))
+            pg.draw.rect(pantalla, (14, 26, 35), rect.inflate(14, 10), border_radius=5)
+            pantalla.blit(im, rect)
+
+import voces
+voces.instalar(sys.modules[__name__])
+
+import menu
+menu.instalar(sys.modules[__name__])
+
+import pausa
+pausa.instalar(sys.modules[__name__])
 
 if __name__=="__main__":
     main()

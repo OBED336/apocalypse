@@ -1,0 +1,4496 @@
+{
+  "type": "regular-grid-tilesheet",
+  "image": "topdown_modern_street_core_clean_tilesheet.png",
+  "count": 195,
+  "columns": 8,
+  "rows": 25,
+  "cell_width": 320,
+  "cell_height": 272,
+  "tiles": [
+    {
+      "name": "streetlight_single",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_streetlight_single_01.png",
+      "row": 0,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 99,
+        "y": 38,
+        "width": 122,
+        "height": 234
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "streetlight_double",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_streetlight_double_01.png",
+      "row": 0,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 0,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 409,
+        "y": 29,
+        "width": 142,
+        "height": 243
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "bench_park",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_bench_park_01.png",
+      "row": 0,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 0,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 701,
+        "y": 80,
+        "width": 198,
+        "height": 192
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "bench_bus_stop",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_bench_bus_stop_01.png",
+      "row": 0,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 0,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1030,
+        "y": 128,
+        "width": 180,
+        "height": 144
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "bus_stop_shelter",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_bus_stop_shelter_01.png",
+      "row": 0,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 0,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1345,
+        "y": 45,
+        "width": 189,
+        "height": 227
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "mailbox_post",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_mailbox_post_01.png",
+      "row": 0,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 0,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1701,
+        "y": 101,
+        "width": 117,
+        "height": 171
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "hydrant_fire",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_hydrant_fire_01.png",
+      "row": 0,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 0,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2030,
+        "y": 124,
+        "width": 99,
+        "height": 148
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "traffic_light",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_traffic_light_01.png",
+      "row": 0,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 0,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2359,
+        "y": 50,
+        "width": 82,
+        "height": 222
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "sign_post_blank",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_sign_post_blank_01.png",
+      "row": 1,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 272,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 107,
+        "y": 331,
+        "width": 106,
+        "height": 213
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "billboard_small_blank",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_billboard_small_blank_01.png",
+      "row": 1,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 272,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 428,
+        "y": 355,
+        "width": 103,
+        "height": 189
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "kiosk_newsstand",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_kiosk_newsstand_01.png",
+      "row": 1,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 272,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 720,
+        "y": 333,
+        "width": 160,
+        "height": 211
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "stall_food_cart",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_stall_food_cart_01.png",
+      "row": 1,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 272,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1050,
+        "y": 358,
+        "width": 140,
+        "height": 186
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "bike_rack",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_bike_rack_01.png",
+      "row": 1,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 272,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1345,
+        "y": 396,
+        "width": 189,
+        "height": 148
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "phone_booth",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_phone_booth_01.png",
+      "row": 1,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 272,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1691,
+        "y": 323,
+        "width": 138,
+        "height": 221
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "fountain_drinking",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_fountain_drinking_01.png",
+      "row": 1,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 272,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2027,
+        "y": 390,
+        "width": 105,
+        "height": 154
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "clock_pillar_street",
+      "category": "street_furniture",
+      "file": "Tiles/StreetFurniture/street_street_furniture_clock_pillar_street_01.png",
+      "row": 1,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 272,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2351,
+        "y": 320,
+        "width": 97,
+        "height": 224
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "tree_street_round",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_tree_street_round_01.png",
+      "row": 2,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 544,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 59,
+        "y": 583,
+        "width": 201,
+        "height": 233
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "tree_street_tall",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_tree_street_tall_01.png",
+      "row": 2,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 544,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 416,
+        "y": 576,
+        "width": 127,
+        "height": 240
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "tree_sapling_supported",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_tree_sapling_supported_01.png",
+      "row": 2,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 544,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 732,
+        "y": 577,
+        "width": 136,
+        "height": 239
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "planter_box_long",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_planter_box_long_01.png",
+      "row": 2,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 544,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 992,
+        "y": 609,
+        "width": 255,
+        "height": 207
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "planter_round_large",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_planter_round_large_01.png",
+      "row": 2,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 544,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1356,
+        "y": 609,
+        "width": 167,
+        "height": 207
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "hedge_segment",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_hedge_segment_01.png",
+      "row": 2,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 544,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1650,
+        "y": 629,
+        "width": 220,
+        "height": 187
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "hedge_corner",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_hedge_corner_01.png",
+      "row": 2,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 544,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1951,
+        "y": 646,
+        "width": 257,
+        "height": 170
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "flower_bed_segment",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_flower_bed_segment_01.png",
+      "row": 2,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 544,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2281,
+        "y": 640,
+        "width": 237,
+        "height": 176
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "grass_patch_organic",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_grass_patch_organic_01.png",
+      "row": 3,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 816,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 41,
+        "y": 919,
+        "width": 237,
+        "height": 169
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "bush_single",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_bush_single_01.png",
+      "row": 3,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 816,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 399,
+        "y": 938,
+        "width": 161,
+        "height": 150
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "bush_pair",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_bush_pair_01.png",
+      "row": 3,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 816,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 686,
+        "y": 924,
+        "width": 227,
+        "height": 164
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "tree_pit_grate",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_tree_pit_grate_01.png",
+      "row": 3,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 816,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 990,
+        "y": 929,
+        "width": 259,
+        "height": 159
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "vine_wall_segment",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_vine_wall_segment_01.png",
+      "row": 3,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 816,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1341,
+        "y": 880,
+        "width": 198,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "flowerpot_street_pair",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_flowerpot_street_pair_01.png",
+      "row": 3,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 816,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1658,
+        "y": 887,
+        "width": 204,
+        "height": 201
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "lawn_edge_strip",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_lawn_edge_strip_01.png",
+      "row": 3,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 816,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1956,
+        "y": 928,
+        "width": 247,
+        "height": 160
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "shrub_trimmed_ball",
+      "category": "greenery",
+      "file": "Tiles/Greenery/street_greenery_shrub_trimmed_ball_01.png",
+      "row": 3,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 816,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2324,
+        "y": 899,
+        "width": 152,
+        "height": 189
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "trash_bin_street_green",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_trash_bin_street_green_01.png",
+      "row": 4,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 1088,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 92,
+        "y": 1166,
+        "width": 136,
+        "height": 194
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "recycling_bins_row",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_recycling_bins_row_01.png",
+      "row": 4,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 1088,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 371,
+        "y": 1162,
+        "width": 217,
+        "height": 198
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "dumpster_large",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_dumpster_large_01.png",
+      "row": 4,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 1088,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 693,
+        "y": 1152,
+        "width": 213,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "manhole_cover",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_manhole_cover_01.png",
+      "row": 4,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 1088,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1027,
+        "y": 1244,
+        "width": 186,
+        "height": 116
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "drain_grate_curb",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_drain_grate_curb_01.png",
+      "row": 4,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 1088,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1317,
+        "y": 1191,
+        "width": 246,
+        "height": 169
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "utility_box_electric",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_utility_box_electric_01.png",
+      "row": 4,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 1088,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1691,
+        "y": 1158,
+        "width": 137,
+        "height": 202
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "utility_pole",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_utility_pole_01.png",
+      "row": 4,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 1088,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2013,
+        "y": 1163,
+        "width": 133,
+        "height": 197
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "transformer_ground",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_transformer_ground_01.png",
+      "row": 4,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 1088,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2329,
+        "y": 1149,
+        "width": 141,
+        "height": 211
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "vent_sidewalk",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_vent_sidewalk_01.png",
+      "row": 5,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 1360,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 31,
+        "y": 1428,
+        "width": 257,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "water_valve_cover",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_water_valve_cover_01.png",
+      "row": 5,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 1360,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 407,
+        "y": 1528,
+        "width": 146,
+        "height": 104
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "cable_spool",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_cable_spool_01.png",
+      "row": 5,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 1360,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 708,
+        "y": 1443,
+        "width": 184,
+        "height": 189
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "construction_barrier",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_construction_barrier_01.png",
+      "row": 5,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 1360,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1042,
+        "y": 1457,
+        "width": 155,
+        "height": 175
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "traffic_cone_pair",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_traffic_cone_pair_01.png",
+      "row": 5,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 1360,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1346,
+        "y": 1465,
+        "width": 187,
+        "height": 167
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "barrier_concrete_jersey",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_barrier_concrete_jersey_01.png",
+      "row": 5,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 1360,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1658,
+        "y": 1445,
+        "width": 203,
+        "height": 187
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "scaffolding_segment",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_scaffolding_segment_01.png",
+      "row": 5,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 1360,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1997,
+        "y": 1416,
+        "width": 165,
+        "height": 216
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "portable_toilet",
+      "category": "utilities",
+      "file": "Tiles/Utilities/street_utilities_portable_toilet_01.png",
+      "row": 5,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 1360,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2321,
+        "y": 1407,
+        "width": 157,
+        "height": 225
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "bollard_single",
+      "category": "props",
+      "file": "Tiles/Props/street_props_bollard_single_01.png",
+      "row": 6,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 1632,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 125,
+        "y": 1723,
+        "width": 70,
+        "height": 181
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "bollard_chain_pair",
+      "category": "props",
+      "file": "Tiles/Props/street_props_bollard_chain_pair_01.png",
+      "row": 6,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 1632,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 384,
+        "y": 1683,
+        "width": 191,
+        "height": 221
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "bicycle_parked",
+      "category": "props",
+      "file": "Tiles/Props/street_props_bicycle_parked_01.png",
+      "row": 6,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 1632,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 687,
+        "y": 1690,
+        "width": 225,
+        "height": 214
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "scooter_kick",
+      "category": "props",
+      "file": "Tiles/Props/street_props_scooter_kick_01.png",
+      "row": 6,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 1632,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1042,
+        "y": 1686,
+        "width": 155,
+        "height": 218
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "skateboard",
+      "category": "props",
+      "file": "Tiles/Props/street_props_skateboard_01.png",
+      "row": 6,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 1632,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1342,
+        "y": 1761,
+        "width": 195,
+        "height": 143
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "newspaper_bundle",
+      "category": "props",
+      "file": "Tiles/Props/street_props_newspaper_bundle_01.png",
+      "row": 6,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 1632,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1656,
+        "y": 1749,
+        "width": 207,
+        "height": 155
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "cardboard_boxes_street",
+      "category": "props",
+      "file": "Tiles/Props/street_props_cardboard_boxes_street_01.png",
+      "row": 6,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 1632,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1980,
+        "y": 1709,
+        "width": 199,
+        "height": 195
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "pallet_wood",
+      "category": "props",
+      "file": "Tiles/Props/street_props_pallet_wood_01.png",
+      "row": 6,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 1632,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2273,
+        "y": 1725,
+        "width": 254,
+        "height": 179
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "crate_delivery_stack",
+      "category": "props",
+      "file": "Tiles/Props/street_props_crate_delivery_stack_01.png",
+      "row": 7,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 1904,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 79,
+        "y": 1962,
+        "width": 162,
+        "height": 214
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "umbrella_cafe_closed",
+      "category": "props",
+      "file": "Tiles/Props/street_props_umbrella_cafe_closed_01.png",
+      "row": 7,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 1904,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 421,
+        "y": 1919,
+        "width": 117,
+        "height": 257
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "chair_cafe_outdoor",
+      "category": "props",
+      "file": "Tiles/Props/street_props_chair_cafe_outdoor_01.png",
+      "row": 7,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 1904,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 716,
+        "y": 1931,
+        "width": 167,
+        "height": 245
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "table_cafe_round",
+      "category": "props",
+      "file": "Tiles/Props/street_props_table_cafe_round_01.png",
+      "row": 7,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 1904,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1036,
+        "y": 1975,
+        "width": 167,
+        "height": 201
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "menu_board_blank",
+      "category": "props",
+      "file": "Tiles/Props/street_props_menu_board_blank_01.png",
+      "row": 7,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 1904,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1357,
+        "y": 1965,
+        "width": 165,
+        "height": 211
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "awning_shop_segment",
+      "category": "props",
+      "file": "Tiles/Props/street_props_awning_shop_segment_01.png",
+      "row": 7,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 1904,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1655,
+        "y": 1984,
+        "width": 210,
+        "height": 192
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "flag_banner_pole_blank",
+      "category": "props",
+      "file": "Tiles/Props/street_props_flag_banner_pole_blank_01.png",
+      "row": 7,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 1904,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2026,
+        "y": 1967,
+        "width": 108,
+        "height": 209
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "puddle_water",
+      "category": "props",
+      "file": "Tiles/Props/street_props_puddle_water_01.png",
+      "row": 7,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 1904,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2297,
+        "y": 2046,
+        "width": 206,
+        "height": 130
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "leaves_pile",
+      "category": "props",
+      "file": "Tiles/Props/street_props_leaves_pile_01.png",
+      "row": 8,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 2176,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 70,
+        "y": 2323,
+        "width": 180,
+        "height": 125
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "pigeon_pair",
+      "category": "props",
+      "file": "Tiles/Props/street_props_pigeon_pair_01.png",
+      "row": 8,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 2176,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 369,
+        "y": 2331,
+        "width": 221,
+        "height": 117
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "manhole_steam_grate",
+      "category": "props",
+      "file": "Tiles/Props/street_props_manhole_steam_grate_01.png",
+      "row": 8,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 2176,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 687,
+        "y": 2307,
+        "width": 225,
+        "height": 141
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "car_sedan_blue",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_car_sedan_blue_01.png",
+      "row": 8,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 2176,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 985,
+        "y": 2265,
+        "width": 269,
+        "height": 183
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "car_hatchback_red",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_car_hatchback_red_01.png",
+      "row": 8,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 2176,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1316,
+        "y": 2264,
+        "width": 247,
+        "height": 184
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "car_taxi_yellow",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_car_taxi_yellow_01.png",
+      "row": 8,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 2176,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1628,
+        "y": 2269,
+        "width": 264,
+        "height": 179
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "van_delivery_white",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_van_delivery_white_01.png",
+      "row": 8,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 2176,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1948,
+        "y": 2224,
+        "width": 264,
+        "height": 224
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "bus_city",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_bus_city_01.png",
+      "row": 8,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 2176,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2247,
+        "y": 2196,
+        "width": 306,
+        "height": 252
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "truck_small_flatbed",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_truck_small_flatbed_01.png",
+      "row": 9,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 2448,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 33,
+        "y": 2537,
+        "width": 254,
+        "height": 183
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "motorcycle_parked",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_motorcycle_parked_01.png",
+      "row": 9,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 2448,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 387,
+        "y": 2543,
+        "width": 185,
+        "height": 177
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "bicycle_cargo",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_bicycle_cargo_01.png",
+      "row": 9,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 2448,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 705,
+        "y": 2544,
+        "width": 189,
+        "height": 176
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "car_police_plain",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_car_police_plain_01.png",
+      "row": 9,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 2448,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 986,
+        "y": 2534,
+        "width": 268,
+        "height": 186
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "ambulance_plain",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_ambulance_plain_01.png",
+      "row": 9,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 2448,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1303,
+        "y": 2493,
+        "width": 274,
+        "height": 227
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "scooter_delivery_box",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_scooter_delivery_box_01.png",
+      "row": 9,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 2448,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1662,
+        "y": 2506,
+        "width": 196,
+        "height": 214
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "trailer_food",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_trailer_food_01.png",
+      "row": 9,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 2448,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1958,
+        "y": 2483,
+        "width": 244,
+        "height": 237
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "car_parked_cover",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_car_parked_cover_01.png",
+      "row": 9,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 2448,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2254,
+        "y": 2517,
+        "width": 291,
+        "height": 203
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "wheelbarrow",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_wheelbarrow_01.png",
+      "row": 10,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 2720,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 56,
+        "y": 2826,
+        "width": 208,
+        "height": 166
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "shopping_cart_stray",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_shopping_cart_stray_01.png",
+      "row": 10,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 2720,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 396,
+        "y": 2798,
+        "width": 168,
+        "height": 194
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "stroller_baby",
+      "category": "transport",
+      "file": "Tiles/Transport/street_transport_stroller_baby_01.png",
+      "row": 10,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 2720,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 718,
+        "y": 2794,
+        "width": 163,
+        "height": 198
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "sidewalk_plain",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_sidewalk_plain_01.png",
+      "row": 10,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 2720,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 983,
+        "y": 2788,
+        "width": 273,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "sidewalk_tactile_paving",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_sidewalk_tactile_paving_01.png",
+      "row": 10,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 2720,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1304,
+        "y": 2788,
+        "width": 272,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "road_asphalt_plain",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_road_asphalt_plain_01.png",
+      "row": 10,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 2720,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1624,
+        "y": 2788,
+        "width": 272,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "road_asphalt_lane_line",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_road_asphalt_lane_line_01.png",
+      "row": 10,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 2720,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1944,
+        "y": 2788,
+        "width": 271,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "crosswalk_zebra",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_crosswalk_zebra_01.png",
+      "row": 10,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 2720,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2264,
+        "y": 2787,
+        "width": 272,
+        "height": 205
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "road_corner_curve",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_road_corner_curve_01.png",
+      "row": 11,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 2992,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 24,
+        "y": 3058,
+        "width": 271,
+        "height": 206
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "curb_straight",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_curb_straight_01.png",
+      "row": 11,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 2992,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 344,
+        "y": 3060,
+        "width": 272,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "curb_corner",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_curb_corner_01.png",
+      "row": 11,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 2992,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 664,
+        "y": 3058,
+        "width": 271,
+        "height": 206
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "curb_ramp_accessible",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_curb_ramp_accessible_01.png",
+      "row": 11,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 2992,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 983,
+        "y": 3058,
+        "width": 273,
+        "height": 206
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "parking_space_marked",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_parking_space_marked_01.png",
+      "row": 11,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 2992,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1304,
+        "y": 3060,
+        "width": 272,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "bike_lane_green",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_bike_lane_green_01.png",
+      "row": 11,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 2992,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1624,
+        "y": 3060,
+        "width": 272,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "gutter_strip",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_gutter_strip_01.png",
+      "row": 11,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 2992,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1944,
+        "y": 3060,
+        "width": 271,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "paving_brick_red",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_paving_brick_red_01.png",
+      "row": 11,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 2992,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2264,
+        "y": 3060,
+        "width": 272,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "paving_stone_gray",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_paving_stone_gray_01.png",
+      "row": 12,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 3264,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 24,
+        "y": 3332,
+        "width": 272,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "grass_verge_strip",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_grass_verge_strip_01.png",
+      "row": 12,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 3264,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 344,
+        "y": 3332,
+        "width": 271,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "median_strip_planted",
+      "category": "architecture",
+      "file": "Tiles/Architecture/street_architecture_median_strip_planted_01.png",
+      "row": 12,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 3264,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 664,
+        "y": 3332,
+        "width": 271,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "awning_storefront_wide",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_awning_storefront_wide_01.png",
+      "row": 12,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 3264,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 979,
+        "y": 3328,
+        "width": 282,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "sign_pole_rotating_blank",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_sign_pole_rotating_blank_01.png",
+      "row": 12,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 3264,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1393,
+        "y": 3332,
+        "width": 94,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "sign_neon_frame_blank",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_sign_neon_frame_blank_01.png",
+      "row": 12,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 3264,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1677,
+        "y": 3336,
+        "width": 166,
+        "height": 200
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "mannequin_display_platform",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_mannequin_display_platform_01.png",
+      "row": 12,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 3264,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1966,
+        "y": 3344,
+        "width": 228,
+        "height": 192
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "stall_fruit_stand",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_stall_fruit_stand_01.png",
+      "row": 12,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 3264,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2291,
+        "y": 3318,
+        "width": 218,
+        "height": 218
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "stall_goods_rack",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_stall_goods_rack_01.png",
+      "row": 13,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 3536,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 57,
+        "y": 3604,
+        "width": 206,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "door_mall_double",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_door_mall_double_01.png",
+      "row": 13,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 3536,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 379,
+        "y": 3590,
+        "width": 201,
+        "height": 218
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "door_revolving",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_door_revolving_01.png",
+      "row": 13,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 3536,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 716,
+        "y": 3595,
+        "width": 168,
+        "height": 213
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "storefront_boutique_blank",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_storefront_boutique_blank_01.png",
+      "row": 13,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 3536,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1011,
+        "y": 3590,
+        "width": 217,
+        "height": 218
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "food_truck_large",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_food_truck_large_01.png",
+      "row": 13,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 3536,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1295,
+        "y": 3592,
+        "width": 290,
+        "height": 216
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "ice_cream_cart",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_ice_cream_cart_01.png",
+      "row": 13,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 3536,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1676,
+        "y": 3615,
+        "width": 168,
+        "height": 193
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "kiosk_dome_vendor",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_kiosk_dome_vendor_01.png",
+      "row": 13,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 3536,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1989,
+        "y": 3595,
+        "width": 182,
+        "height": 213
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "string_lights_poles_pair",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_string_lights_poles_pair_01.png",
+      "row": 13,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 3536,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2296,
+        "y": 3586,
+        "width": 207,
+        "height": 222
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "balloon_column_blank",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_balloon_column_blank_01.png",
+      "row": 14,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 3808,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 100,
+        "y": 3861,
+        "width": 120,
+        "height": 219
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "sign_shopping_directory_blank",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_sign_shopping_directory_blank_01.png",
+      "row": 14,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 3808,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 424,
+        "y": 3885,
+        "width": 111,
+        "height": 195
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "rail_pedestrian_guide",
+      "category": "commercial_street",
+      "file": "Tiles/CommercialStreet/street_commercial_street_rail_pedestrian_guide_01.png",
+      "row": 14,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 3808,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 708,
+        "y": 3937,
+        "width": 183,
+        "height": 143
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "porch_steps_house",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_porch_steps_house_01.png",
+      "row": 14,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 3808,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1002,
+        "y": 3855,
+        "width": 236,
+        "height": 225
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "mailbox_post_residential",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_mailbox_post_residential_01.png",
+      "row": 14,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 3808,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1374,
+        "y": 3883,
+        "width": 132,
+        "height": 197
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "fence_wood_segment",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_fence_wood_segment_01.png",
+      "row": 14,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 3808,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1664,
+        "y": 3882,
+        "width": 191,
+        "height": 198
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "fence_iron_segment",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_fence_iron_segment_01.png",
+      "row": 14,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 3808,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1975,
+        "y": 3868,
+        "width": 209,
+        "height": 212
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "fence_gate",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_fence_gate_01.png",
+      "row": 14,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 3808,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2283,
+        "y": 3854,
+        "width": 234,
+        "height": 226
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "garage_door_segment",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_garage_door_segment_01.png",
+      "row": 15,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 4080,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 65,
+        "y": 4120,
+        "width": 189,
+        "height": 232
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "clothesline_rack",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_clothesline_rack_01.png",
+      "row": 15,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 4080,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 353,
+        "y": 4161,
+        "width": 253,
+        "height": 191
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "slide_playground_small",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_slide_playground_small_01.png",
+      "row": 15,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 4080,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 694,
+        "y": 4153,
+        "width": 211,
+        "height": 199
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "swing_set",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_swing_set_01.png",
+      "row": 15,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 4080,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 991,
+        "y": 4090,
+        "width": 258,
+        "height": 262
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "sandbox",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_sandbox_01.png",
+      "row": 15,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 4080,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1320,
+        "y": 4193,
+        "width": 239,
+        "height": 159
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "dog_house",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_dog_house_01.png",
+      "row": 15,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 4080,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1664,
+        "y": 4168,
+        "width": 192,
+        "height": 184
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "bird_bath",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_bird_bath_01.png",
+      "row": 15,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 4080,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2005,
+        "y": 4171,
+        "width": 149,
+        "height": 181
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "garden_wall_low_segment",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_garden_wall_low_segment_01.png",
+      "row": 15,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 4080,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2283,
+        "y": 4173,
+        "width": 234,
+        "height": 179
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "lamp_garden_low",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_lamp_garden_low_01.png",
+      "row": 16,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 4352,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 111,
+        "y": 4414,
+        "width": 97,
+        "height": 210
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "trash_bin_residential_wheeled",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_trash_bin_residential_wheeled_01.png",
+      "row": 16,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 4352,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 391,
+        "y": 4406,
+        "width": 177,
+        "height": 218
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "hose_reel_garden",
+      "category": "residential_street",
+      "file": "Tiles/ResidentialStreet/street_residential_street_hose_reel_garden_01.png",
+      "row": 16,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 4352,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 710,
+        "y": 4420,
+        "width": 179,
+        "height": 204
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "fountain_central_large",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_fountain_central_large_01.png",
+      "row": 16,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 4352,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 999,
+        "y": 4396,
+        "width": 241,
+        "height": 228
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "statue_pedestal_blank",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_statue_pedestal_blank_01.png",
+      "row": 16,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 4352,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1378,
+        "y": 4400,
+        "width": 124,
+        "height": 224
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "gazebo_octagonal",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_gazebo_octagonal_01.png",
+      "row": 16,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 4352,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1665,
+        "y": 4394,
+        "width": 189,
+        "height": 230
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "pergola_walkway_segment",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_pergola_walkway_segment_01.png",
+      "row": 16,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 4352,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1972,
+        "y": 4396,
+        "width": 216,
+        "height": 228
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "park_gate_arch",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_park_gate_arch_01.png",
+      "row": 16,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 4352,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2314,
+        "y": 4412,
+        "width": 172,
+        "height": 212
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "flagpoles_triple_blank",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_flagpoles_triple_blank_01.png",
+      "row": 17,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 4624,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 63,
+        "y": 4682,
+        "width": 194,
+        "height": 214
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "stage_outdoor_small",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_stage_outdoor_small_01.png",
+      "row": 17,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 4624,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 364,
+        "y": 4729,
+        "width": 232,
+        "height": 167
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "bleacher_steps_segment",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_bleacher_steps_segment_01.png",
+      "row": 17,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 4624,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 692,
+        "y": 4683,
+        "width": 215,
+        "height": 213
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "picnic_table_attached_benches",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_picnic_table_attached_benches_01.png",
+      "row": 17,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 4624,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 997,
+        "y": 4717,
+        "width": 246,
+        "height": 179
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "grill_park_standing",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_grill_park_standing_01.png",
+      "row": 17,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 4624,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1347,
+        "y": 4709,
+        "width": 185,
+        "height": 187
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "viewer_telescope_coin",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_viewer_telescope_coin_01.png",
+      "row": 17,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 4624,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1698,
+        "y": 4709,
+        "width": 123,
+        "height": 187
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "sign_park_map_blank",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_sign_park_map_blank_01.png",
+      "row": 17,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 4624,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2011,
+        "y": 4690,
+        "width": 137,
+        "height": 206
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "fountain_drinking_park",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_fountain_drinking_park_01.png",
+      "row": 17,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 4624,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2335,
+        "y": 4707,
+        "width": 129,
+        "height": 189
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "lamp_post_classic_park",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_lamp_post_classic_park_01.png",
+      "row": 18,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 4896,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 100,
+        "y": 4956,
+        "width": 120,
+        "height": 212
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "dovecote_birdhouse",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_dovecote_birdhouse_01.png",
+      "row": 18,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 4896,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 427,
+        "y": 4966,
+        "width": 106,
+        "height": 202
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "sundial",
+      "category": "plaza_park_structures",
+      "file": "Tiles/PlazaParkStructures/street_plaza_park_structures_sundial_01.png",
+      "row": 18,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 4896,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 734,
+        "y": 4968,
+        "width": 132,
+        "height": 200
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "tree_oak_large",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_tree_oak_large_01.png",
+      "row": 18,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 4896,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1001,
+        "y": 4928,
+        "width": 238,
+        "height": 240
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "tree_willow_weeping",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_tree_willow_weeping_01.png",
+      "row": 18,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 4896,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1334,
+        "y": 4950,
+        "width": 211,
+        "height": 218
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "tree_pine_pair",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_tree_pine_pair_01.png",
+      "row": 18,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 4896,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1645,
+        "y": 4943,
+        "width": 230,
+        "height": 225
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "tree_cherry_blossom",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_tree_cherry_blossom_01.png",
+      "row": 18,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 4896,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1954,
+        "y": 4942,
+        "width": 251,
+        "height": 226
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "flower_bed_round_large",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_flower_bed_round_large_01.png",
+      "row": 18,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 4896,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2272,
+        "y": 4979,
+        "width": 255,
+        "height": 189
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "flower_bed_geometric_group",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_flower_bed_geometric_group_01.png",
+      "row": 19,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 5168,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 37,
+        "y": 5251,
+        "width": 246,
+        "height": 189
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "hedge_maze_segment",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_hedge_maze_segment_01.png",
+      "row": 19,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 5168,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 361,
+        "y": 5237,
+        "width": 238,
+        "height": 203
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "lawn_patch_large_rounded",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_lawn_patch_large_rounded_01.png",
+      "row": 19,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 5168,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 669,
+        "y": 5261,
+        "width": 261,
+        "height": 179
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "pond_edge_segment",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_pond_edge_segment_01.png",
+      "row": 19,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 5168,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 993,
+        "y": 5297,
+        "width": 254,
+        "height": 143
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "pond_lily_pads_group",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_pond_lily_pads_group_01.png",
+      "row": 19,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 5168,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1327,
+        "y": 5286,
+        "width": 226,
+        "height": 154
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "path_stone_segment",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_path_stone_segment_01.png",
+      "row": 19,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 5168,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1637,
+        "y": 5293,
+        "width": 246,
+        "height": 147
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "stepping_stones_group",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_stepping_stones_group_01.png",
+      "row": 19,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 5168,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1955,
+        "y": 5286,
+        "width": 250,
+        "height": 154
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "rock_landscape_group",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_rock_landscape_group_01.png",
+      "row": 19,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 5168,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2274,
+        "y": 5273,
+        "width": 252,
+        "height": 167
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "boardwalk_segment",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_boardwalk_segment_01.png",
+      "row": 20,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 5440,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 32,
+        "y": 5534,
+        "width": 255,
+        "height": 178
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "reed_cluster",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_reed_cluster_01.png",
+      "row": 20,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 5440,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 371,
+        "y": 5518,
+        "width": 218,
+        "height": 194
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "mushroom_ring",
+      "category": "plaza_park_landscape",
+      "file": "Tiles/PlazaParkLandscape/street_plaza_park_landscape_mushroom_ring_01.png",
+      "row": 20,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 5440,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 684,
+        "y": 5544,
+        "width": 231,
+        "height": 168
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "fire_escape_segment",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_fire_escape_segment_01.png",
+      "row": 20,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 5440,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 998,
+        "y": 5468,
+        "width": 244,
+        "height": 244
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "door_back_metal",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_door_back_metal_01.png",
+      "row": 20,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 5440,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1360,
+        "y": 5463,
+        "width": 159,
+        "height": 249
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "duct_vent_wall",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_duct_vent_wall_01.png",
+      "row": 20,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 5440,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1662,
+        "y": 5485,
+        "width": 196,
+        "height": 227
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "ac_units_wall_group",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_ac_units_wall_group_01.png",
+      "row": 20,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 5440,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1954,
+        "y": 5496,
+        "width": 252,
+        "height": 216
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "meter_boxes_wall_group",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_meter_boxes_wall_group_01.png",
+      "row": 20,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 5440,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2302,
+        "y": 5501,
+        "width": 196,
+        "height": 211
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "graffiti_wall_abstract",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_graffiti_wall_abstract_01.png",
+      "row": 21,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 5712,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 49,
+        "y": 5756,
+        "width": 222,
+        "height": 228
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "trash_bags_pile",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_trash_bags_pile_01.png",
+      "row": 21,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 5712,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 362,
+        "y": 5792,
+        "width": 235,
+        "height": 192
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "boxes_damaged_pile",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_boxes_damaged_pile_01.png",
+      "row": 21,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 5712,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 673,
+        "y": 5775,
+        "width": 254,
+        "height": 209
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "window_boarded",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_window_boarded_01.png",
+      "row": 21,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 5712,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1030,
+        "y": 5756,
+        "width": 179,
+        "height": 228
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "fence_chainlink_segment",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_fence_chainlink_segment_01.png",
+      "row": 21,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 5712,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1341,
+        "y": 5748,
+        "width": 198,
+        "height": 236
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "fence_chainlink_gate",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_fence_chainlink_gate_01.png",
+      "row": 21,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 5712,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1670,
+        "y": 5739,
+        "width": 179,
+        "height": 245
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "manhole_steaming",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_manhole_steaming_01.png",
+      "row": 21,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 5712,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1973,
+        "y": 5799,
+        "width": 213,
+        "height": 185
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "extinguisher_box_wall",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_extinguisher_box_wall_01.png",
+      "row": 21,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 5712,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2331,
+        "y": 5783,
+        "width": 138,
+        "height": 201
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "cats_stray_pair",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_cats_stray_pair_01.png",
+      "row": 22,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 5984,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 64,
+        "y": 6107,
+        "width": 192,
+        "height": 149
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "rats_pair",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_rats_pair_01.png",
+      "row": 22,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 5984,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 368,
+        "y": 6131,
+        "width": 223,
+        "height": 125
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "puddle_oil_stained",
+      "category": "alley_backstreet",
+      "file": "Tiles/AlleyBackstreet/street_alley_backstreet_puddle_oil_stained_01.png",
+      "row": 22,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 5984,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 688,
+        "y": 6117,
+        "width": 223,
+        "height": 139
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "plaza_stone_light",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_plaza_stone_light_01.png",
+      "row": 22,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 5984,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 982,
+        "y": 6048,
+        "width": 275,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "plaza_stone_pattern",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_plaza_stone_pattern_01.png",
+      "row": 22,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 5984,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1302,
+        "y": 6049,
+        "width": 276,
+        "height": 207
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "park_dirt_path",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_park_dirt_path_01.png",
+      "row": 22,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 5984,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1622,
+        "y": 6049,
+        "width": 275,
+        "height": 207
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "park_grass_dark",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_park_grass_dark_01.png",
+      "row": 22,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 5984,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1943,
+        "y": 6049,
+        "width": 274,
+        "height": 207
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "cobblestone_road",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_cobblestone_road_01.png",
+      "row": 22,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 5984,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2263,
+        "y": 6047,
+        "width": 273,
+        "height": 209
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "boardwalk_planks",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_boardwalk_planks_01.png",
+      "row": 23,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 6256,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 22,
+        "y": 6320,
+        "width": 275,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "commercial_tile_polished",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_commercial_tile_polished_01.png",
+      "row": 23,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 6256,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 342,
+        "y": 6320,
+        "width": 275,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "commercial_tile_striped",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_commercial_tile_striped_01.png",
+      "row": 23,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 6256,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 663,
+        "y": 6320,
+        "width": 274,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "alley_asphalt_old",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_alley_asphalt_old_01.png",
+      "row": 23,
+      "column": 3,
+      "cell": {
+        "x": 960,
+        "y": 6256,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 983,
+        "y": 6320,
+        "width": 273,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "alley_brick_broken",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_alley_brick_broken_01.png",
+      "row": 23,
+      "column": 4,
+      "cell": {
+        "x": 1280,
+        "y": 6256,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1303,
+        "y": 6319,
+        "width": 274,
+        "height": 209
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    },
+    {
+      "name": "drain_channel_center",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_drain_channel_center_01.png",
+      "row": 23,
+      "column": 5,
+      "cell": {
+        "x": 1600,
+        "y": 6256,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1622,
+        "y": 6320,
+        "width": 275,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "speed_bump_strip",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_speed_bump_strip_01.png",
+      "row": 23,
+      "column": 6,
+      "cell": {
+        "x": 1920,
+        "y": 6256,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 1943,
+        "y": 6320,
+        "width": 273,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "driveway_concrete",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_driveway_concrete_01.png",
+      "row": 23,
+      "column": 7,
+      "cell": {
+        "x": 2240,
+        "y": 6256,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 2263,
+        "y": 6321,
+        "width": 273,
+        "height": 207
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "sidewalk_narrow_residential",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_sidewalk_narrow_residential_01.png",
+      "row": 24,
+      "column": 0,
+      "cell": {
+        "x": 0,
+        "y": 6528,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 22,
+        "y": 6592,
+        "width": 275,
+        "height": 208
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "pond_water_surface",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_pond_water_surface_01.png",
+      "row": 24,
+      "column": 1,
+      "cell": {
+        "x": 320,
+        "y": 6528,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 342,
+        "y": 6593,
+        "width": 275,
+        "height": 207
+      },
+      "anchor_in_cell": {
+        "x": 159,
+        "y": 256
+      }
+    },
+    {
+      "name": "sand_ground",
+      "category": "architecture",
+      "file": "Tiles/Architecture/Extended/street_architecture_sand_ground_01.png",
+      "row": 24,
+      "column": 2,
+      "cell": {
+        "x": 640,
+        "y": 6528,
+        "width": 320,
+        "height": 272
+      },
+      "sprite": {
+        "x": 663,
+        "y": 6593,
+        "width": 274,
+        "height": 207
+      },
+      "anchor_in_cell": {
+        "x": 160,
+        "y": 256
+      }
+    }
+  ]
+}

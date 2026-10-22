@@ -1,0 +1,43 @@
+APOCALYPSE: LAST SURVIVOR - CONVERSACIONES
+
+INICIAR
+Extrae el ZIP completo en una carpeta y abre INICIAR.bat.
+Requiere Python 3 y pygame. Si falta pygame, abre una terminal en esta
+carpeta y ejecuta: python -m pip install -r requirements.txt
+También puedes iniciar con: python apocalypse_ultimate.py
+No copies los entornos .venv del RAR: contienen rutas de otra instalación.
+
+HABLAR CON LOS PERSONAJES
+Busca a los compañeros sentados repartidos por las salas del nivel.
+Acércate hasta que aparezca el aviso con su nombre.
+P1: T. P2: L. Mando: R3 (botón 10, pulsar stick derecho).
+Si hay dos compañeros cerca, hablas con el más cercano.
+Solo pueden conversar los jugadores vivos de la misma sala.
+
+En la conversación:
+- Arriba/abajo o W/S: selecciona una pregunta.
+- Enter: el personaje responde.
+- 1, 2 y 3: pregunta directamente por su estado, consejos o el equipo.
+- 4, Escape o Hasta luego: cierra y continúa la partida.
+- Mando del jugador que abrió el diálogo: cruceta o LB/RB para elegir,
+  A para hablar y B para cerrar.
+
+Cada compañero tiene respuestas propias. Los consejos mencionan la zona
+actual y algunas respuestas cambian cuando el jugador está herido.
+Son conversaciones de texto con opciones predefinidas; no incluyen
+micrófono ni IA generativa. Las voces añadidas se describen en LEEME_VALERIA_Y_VOCES.txt. Funcionan sin Internet ni claves API.
+El combate y el temporizador quedan pausados durante la conversación,
+también en cooperativo, hasta que se cierra el diálogo.
+
+ARCHIVOS MODIFICADOS
+apocalypse_ultimate.py: interacción, proximidad, panel y controles.
+conversaciones.py: preguntas y respuestas para los cuatro compañeros.
+INICIAR.bat y requirements.txt: inicio e instalación de dependencia.
+Consulta LEEME.txt para los controles y sistemas anteriores del juego.
+
+VALIDACIÓN
+Compilación Python; apertura, respuestas y cierre de diálogos; restricciones
+de distancia, sala, transición y salud; pausa del mundo en el bucle real;
+apertura y cierre para P2; revisión visual del panel.
+Pruebas automáticas con SDL sin ventana. El mando se implementó pero no
+se comprobó con un dispositivo físico.
